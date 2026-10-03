@@ -46,6 +46,17 @@ body{background:var(--ground);color:var(--ink);font-family:var(--f-body);font-si
 .axes{position:absolute;left:16px;bottom:calc(14px + env(safe-area-inset-bottom,0px));pointer-events:none;display:flex;align-items:flex-end;gap:8px;font:400 10.5px/1 var(--f-mono);color:var(--ink-dim)}
 .axes svg{width:44px;height:44px;overflow:visible}
 
+/* Invert: the view turns off-white, so the overlay text goes dark */
+#app.inverted .hud h1{color:#141413;text-shadow:0 1px 2px rgba(255,255,255,.7)}
+#app.inverted .hud h1 .ver{color:#9a6512}
+#app.inverted .hud .stats{color:#5f5c55;text-shadow:0 1px 2px rgba(255,255,255,.8)}
+#app.inverted .hud .stats b{color:#141413}
+#app.inverted .hud .stats .fw{color:#9a6512} #app.inverted .hud .stats .bk{color:#22708f}
+#app.inverted .axes{color:#5f5c55}
+#app.inverted .axes circle{fill:#141413}
+#app.inverted .brush{border-color:rgba(20,20,19,.55);box-shadow:0 0 0 1px rgba(255,255,255,.55)}
+#app.inverted .brush.hit{border-color:var(--amber);box-shadow:0 0 0 1px rgba(255,255,255,.55),0 0 14px rgba(226,165,66,.55)}
+
 .pane{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:16px;width:var(--pane-w);max-height:calc(100% - 24px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;background:var(--pane);border:1px solid var(--line);border-radius:6px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 40px rgba(0,0,0,.45)}
 .pane-head{display:flex;align-items:center;gap:6px;padding:10px 10px 10px 12px;border-bottom:1px solid var(--line)}
 .spacer{flex:1}
@@ -101,6 +112,52 @@ input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;bac
 .legend span{display:inline-flex;align-items:center;gap:5px}
 .legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
 
+.ramp-ed{display:flex;flex-direction:column;gap:6px}
+.ramp-title{font-size:12.5px;color:var(--ink)}
+.ramp-track{position:relative;padding-bottom:14px}
+.ramp-bar{height:18px;border-radius:3px;border:1px solid var(--line);cursor:copy}
+.ramp-keys{position:absolute;left:0;right:0;bottom:0;height:13px}
+.ramp-key{position:absolute;top:0;width:12px;height:13px;margin-left:-6px;padding:0;border:0;background:transparent;cursor:ew-resize;touch-action:none}
+.ramp-key::before{content:"";position:absolute;left:5px;top:-4px;width:2px;height:4px;background:var(--ink-dim)}
+.ramp-key::after{content:"";position:absolute;left:1px;top:1px;width:8px;height:8px;border-radius:2px;background:var(--c);border:1px solid var(--ink-dim)}
+.ramp-key.sel::before{background:var(--amber)}
+.ramp-key.sel::after{border:2px solid var(--amber);left:0;top:0}
+.ramp-key:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.ramp-tools{display:grid;grid-template-columns:34px 62px 28px minmax(0,1fr) auto;gap:6px;align-items:center}
+.ramp-tools input[type=color]{width:34px;height:24px;padding:0;border:1px solid var(--line);border-radius:3px;background:var(--field);cursor:pointer}
+.ramp-tools select{font-family:var(--f-body);font-size:12px;padding:5px 4px;min-width:0}
+.ramp-tools .btn{padding:6px 8px;justify-content:center}
+.ramp-tools .btn:disabled{opacity:.4;cursor:default}
+
+.brush{position:absolute;left:0;top:0;border-radius:50%;border:1px solid rgba(232,229,221,.6);box-shadow:0 0 0 1px rgba(0,0,0,.45);transform:translate(-50%,-50%);pointer-events:none;transition:border-color .15s,box-shadow .15s}
+.brush.hit{border-color:var(--amber);box-shadow:0 0 0 1px rgba(0,0,0,.45),0 0 14px rgba(226,165,66,.55)}
+.guide-box{display:flex;flex-direction:column;gap:7px}
+#guidePreview{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:3px;background:var(--ground)}
+.guide-empty{font-size:12px;line-height:1.45;color:var(--ink-dim);border:1px dashed var(--line);border-radius:3px;padding:10px}
+.guide-row{display:flex;align-items:center;gap:6px;min-width:0}
+.guide-name{flex:1;min-width:0;font:400 11px/1.3 var(--f-mono);color:var(--ink-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.guide-row .btn:disabled{opacity:.4;cursor:default}
+.preset-box{display:flex;flex-direction:column;gap:8px}
+.preset-save{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}
+.preset-save input{min-width:0;font:400 12.5px/1 var(--f-body);color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:3px;padding:6px 8px}
+.preset-save input::placeholder{color:var(--ink-dim)}
+.preset-save .btn.primary{min-width:0;padding:6px 12px}
+.preset-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:4px;max-height:212px;overflow-y:auto;overscroll-behavior:contain}
+.preset-item{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:5px;padding:3px 4px 3px 0;border-bottom:1px solid var(--line)}
+.preset-item:last-child{border-bottom:0}
+.preset-item.active{background:var(--amber-wash)}
+.preset-item.active .preset-load{color:var(--amber)}
+.preset-load{border:0;background:none;cursor:pointer;text-align:left;padding:6px 8px;font:500 12.5px/1.2 var(--f-body);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.preset-load:hover{color:var(--amber)}
+.preset-load:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.preset-date{font:400 10.5px/1 var(--f-mono);color:var(--ink-dim);font-variant-numeric:tabular-nums;white-space:nowrap}
+.preset-item .btn{padding:4px 7px;font-size:11px}
+.preset-item .btn.danger{color:var(--both);border-color:var(--both)}
+.preset-tools{display:flex;gap:6px;flex-wrap:wrap}
+.preset-tools .btn:disabled{opacity:.4;cursor:default}
+.preset-empty{font-size:12px;line-height:1.45;color:var(--ink-dim);padding:9px 10px}
+.hud h1 .ver{margin-left:7px;font:500 10.5px/1 var(--f-mono);letter-spacing:.04em;color:var(--amber);text-transform:none;vertical-align:2px}
+
 .formula{margin:0;font:400 11px/1.65 var(--f-mono);color:var(--ink-dim);background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:4px;padding:8px 10px;white-space:pre-wrap;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
 .formula em{font-style:normal;color:var(--amber)}
 .formula .fw{color:var(--amber)} .formula .bk{color:var(--back)}
@@ -117,7 +174,7 @@ input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;bac
 .code-sheet{position:absolute;left:16px;top:calc(78px + env(safe-area-inset-top,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));right:calc(var(--pane-w) + 32px);display:flex;flex-direction:column;background:var(--pane);border:1px solid var(--line);border-radius:6px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 40px rgba(0,0,0,.45);min-width:0}
 #app.pane-hidden .code-sheet{right:16px}
 .code-head{display:flex;align-items:center;gap:6px;padding:10px;border-bottom:1px solid var(--line);flex-wrap:wrap}
-.code-head .seg{flex:0 1 330px}
+.code-head .seg{flex:0 1 430px}
 .code-note{margin:0;padding:9px 14px;font-size:12px;line-height:1.45;color:var(--ink-dim);border-bottom:1px solid var(--line);max-width:80ch}
 pre.code{margin:0;flex:1;min-height:0;overflow:auto;padding:12px 14px 16px;font:400 11.5px/1.6 var(--f-mono);color:var(--ink);white-space:pre;tab-size:2}
 pre.code .cm{color:#c99a52}
@@ -134,15 +191,16 @@ pre.code .cm{color:#c99a52}
   .code-sheet,#app.pane-hidden .code-sheet{right:16px;top:calc(56px + env(safe-area-inset-top,0px))}
   .axes{display:none}
 }
-@media (prefers-reduced-motion:reduce){details.folder>summary::before{transition:none}}
+@media (prefers-reduced-motion:reduce){details.folder>summary::before,.brush{transition:none}}
 </style>
 </head>
 <body>
 <div id="app">
-  <canvas id="view" aria-label="Particle view, seen like Houdini's Top view: X to the right, Z down"></canvas>
+  <canvas id="view" aria-label="Particle view, seen like Houdini's Top view: X to the right, Z down. Click to randomize N inside the circle, shift-click to inspect a point."></canvas>
+  <div class="brush" id="brush" hidden aria-hidden="true"></div>
 
   <div class="hud">
-    <h1>Nearpoint Angle Solver</h1>
+    <h1>Nearpoint Angle Solver<span class="ver">v002</span></h1>
     <div class="stats" id="stats">starting…</div>
   </div>
 
@@ -163,8 +221,8 @@ pre.code .cm{color:#c99a52}
     </div>
     <div class="pane-body" id="params"></div>
     <div class="pane-foot">
-      <span><kbd>Space</kbd> play</span><span><kbd>.</kbd> step</span><span><kbd>R</kbd> reset</span><span><kbd>G</kbd> GLSL</span><span><kbd>H</kbd> hide</span><span><kbd>F</kbd> fit</span>
-      <span>drag to pan · wheel to zoom · click a point to inspect it</span>
+      <span><kbd>Space</kbd> play</span><span><kbd>.</kbd> step</span><span><kbd>R</kbd> reset</span><span><kbd>G</kbd> GLSL</span><span><kbd>I</kbd> invert</span><span><kbd>H</kbd> hide</span><span><kbd>F</kbd> fit</span>
+      <span>click: randomize N · shift-click: inspect · drag: pan · wheel: zoom</span>
     </div>
   </aside>
   <button class="btn reveal" id="revealBtn" type="button" hidden>Parameters</button>
@@ -195,6 +253,15 @@ if (!gl) { fatal('This browser has WebGL2 turned off or unavailable. Current Chr
 if (!gl.getExtension('EXT_color_buffer_float')) { fatal('This GPU/browser cannot render to floating-point textures (EXT_color_buffer_float), which the solver needs to hold P and N. Try a desktop browser with hardware acceleration on.'); return; }
 
 /* ------------------------------------------------------------------ parameters (defaults = the VEX) */
+const PRESETS = {
+  Ember:      ['#2b2140','#6b2550','#c43c3c','#f08a3e','#ffe2a3'],
+  'Infra-red':['#2a1a6e','#8c2981','#de4968','#fe9f6d','#fcfdbf'],
+  Glacier:    ['#13324a','#1d6f8a','#43b3b0','#a9e4d3','#f3fff9'],
+  Spectral:   ['#3d3bb8','#2e8fd1','#3cc4a0','#c9d65a','#f39b3a','#d93b3b'],
+  Cyclic:     ['#f0b04a','#e0605a','#8a63d2','#3d8fd6','#3fbfa0','#f0b04a'],   // same colour at both ends, so @N has no seam
+  Bone:       ['#3a3733','#f4efe6'],
+};
+const preset = name => PRESETS[name].map((c, i, a) => ({ p: i / (a.length - 1), c }));
 const P = {
   playing: true,
   angle: 70,            // if(angle>70)
@@ -205,13 +272,33 @@ const P = {
   lerpHigh: 0.032,      // lerp(@N, nN, 0.032)
   lerpLow: 0.0325,      // lerp(@N, nN, 0.0325)
   move: 0.008,          // @P -= / += @N*0.008
-  lone: 'vex',          // nothing in radius: 'vex' = copy point 0's N, 'keep' = leave the point alone
+  lone: 'vex',          // nothing in radius: 'vex' = what VEX does, 'keep' = leave the point alone
+  kMode: 'fit',         // 'near': npt = nearpoints(0, @P, .6, 2)[1];  'fit': k = int(fit(@pd, a, b, 2, 2 + extra)), npt = nearpoints(0, @P, .6, k)[-1]
+  kA: 40, kB: 60, kExtra: 10,
+  pdRadius: 0.1,        // pd = len(nearpoints(0, @P, chf("pd_radius"), chi("pd_max_num")))
+  pdMax: 60,
+  shrink: 0.99,         // @N += @N * lerp(1, shrink, fit(@pdn, chf("shrink_pd_min"), chf("shrink_pd_max"), 0, 1))
+  shrinkMin: 0.85, shrinkMax: 1,
+  brush: 75,            // click radius, screen pixels
+  guide: 'on',          // image guide (only acts once an image is loaded)
+  follow: 'edges',      // what counts as a strong area: 'edges', 'dark' or 'light' tones
+  thr: 0.2, soft: 0.2,  // mask = smoothstep(thr, thr + soft, value)
+  steer: 0.25,          // N = lerp(N, contour, mask * steer)
+  pull: 0.003,          // P += pull * uphill on the blurred field
+  darkSlow: 'on',       // if(mask < min_lum) @speed *= mult_in_dark; every P move is scaled by @speed
+  multDark: 0.999, minLum: 0.05,
+  imgFit: 'cover',      // how the image meets the square grid: 'contain', 'cover' or 'stretch'
+  imgScale: 1,          // multiplies the fitted size
+  imgX: 0, imgZ: 0,     // image centre in world units
+  overlay: 'off', overlayAlpha: 0.25,
   size: 10, seed: 0,    // Grid SOP size (Houdini default 10), random seed for N
-  draw: 'points', colorBy: 'dir', pointSize: 1.5, nLen: 0.02, opacity: 0.6, trails: 0,
+  draw: 'points', colorBy: 'pdn', pointSize: 1.5, nLen: 0.02, opacity: 0.6, trails: 0,
+  invert: 'off',        // 'off', 'on' = full invert (off-white background, dark points), 'hue' = flip lightness only
   marker: 'off',
+  ramps: { pdn: preset('Ember'), dir: preset('Cyclic'), angle: preset('Cyclic') },   // one ramp per colour mode
 };
+const DEFAULTS = JSON.parse(JSON.stringify(P));   // what a preset falls back to for any setting it does not name
 const BG = '#07080b';
-const RAMP_STOPS = ['#f0b04a','#e0605a','#8a63d2','#3d8fd6','#3fbfa0'];   // cyclic: wraps back to the first
 const RULE_COL = { fwd: '#e2a542', back: '#4fa3c7', both: '#d9576b', idle: '#4d5058' };
 
 /* ------------------------------------------------------------------ GL helpers */
@@ -259,6 +346,7 @@ const FMT = {
   rgba32f: [gl.RGBA32F, gl.RGBA, gl.FLOAT],
   rg32f:   [gl.RG32F,   gl.RG,   gl.FLOAT],
   rgba16f: [gl.RGBA16F, gl.RGBA, gl.HALF_FLOAT],
+  rgba16f32: [gl.RGBA16F, gl.RGBA, gl.FLOAT],      // half-float storage (filterable everywhere) filled from Float32 data
   rgba8:   [gl.RGBA8,   gl.RGBA, gl.UNSIGNED_BYTE],
 };
 function texture(w, h, fmt, data = null, filter = gl.NEAREST, wrap = gl.CLAMP_TO_EDGE){
@@ -295,6 +383,8 @@ uniform int uCount, uTexW, uCols, uRows, uSeed;
 uniform float uSize;
 layout(location=0) out vec4 oState;
 layout(location=1) out vec4 oInfo;
+layout(location=2) out vec4 oAttr;
+layout(location=3) out vec4 oSpeed;  // @speed = 1: every point starts at full speed
 
 uint hash(uint x){ x ^= x >> 16; x *= 0x7feb352du; x ^= x >> 15; x *= 0x846ca68bu; x ^= x >> 16; return x; }
 float rand01(uint x){ return float(hash(x) >> 8) * (1.0 / 16777216.0); }   // 0 <= r < 1, like VEX rand()
@@ -302,7 +392,8 @@ float rand01(uint x){ return float(hash(x) >> 8) * (1.0 / 16777216.0); }   // 0 
 void main(){
   ivec2 fc = ivec2(gl_FragCoord.xy);
   int ptnum = fc.y * uTexW + fc.x;
-  if (ptnum >= uCount) { oState = vec4(0.0); oInfo = vec4(0.0); return; }
+  oInfo = vec4(0.0); oAttr = vec4(0.0); oSpeed = vec4(1.0);
+  if (ptnum >= uCount) { oState = vec4(0.0); return; }
 
   // Grid in the XZ plane like a Grid SOP: cols along X, rows along Z, centred on the origin
   int col = ptnum % uCols, row = ptnum / uCols;
@@ -317,7 +408,6 @@ void main(){
   N = length(N) > 0.0 ? normalize(N) : vec3(0.0);
 
   oState = vec4(P, N.x, N.z);
-  oInfo = vec4(0.0);
 }`;
 
 // Shared by the bucket pass and the step: which grid cell a position falls in, and its hash bucket.
@@ -346,89 +436,229 @@ const FS_SIM = `
 // One solver step: the wrangle, run on every point. Every point reads the previous
 // step's geometry and writes the next one, the same as an Attribute Wrangle in a SOP Solver.
 #define MAXRING 64
-#define MAXVISIT 65536
+#define MAXVISIT 2048            // safety cap on points looked at per search (only reached in extreme pile-ups)
+#define MAXK 33                  // most neighbours fit mode can collect: k up to 2 + 32
 uniform sampler2D uState;    // (P.x, P.z, N.x, N.z) by ptnum: input 0
 uniform sampler2D uSorted;   // the same data, sorted by grid bucket
 uniform sampler2D uKeys;     // (bucket, ptnum) in sorted order
 uniform sampler2D uRange;    // per bucket: [start, end) in the sorted list
-uniform int uCount, uTexW, uTexShift, uTabW, uTabShift, uRings, uApply, uLone;
+uniform int uCount, uTexW, uTexShift, uTabW, uTabShift, uRings, uApply, uLone, uPdMax;
 uniform float uRadius, uAngleHi, uAngleLo, uLerpHi, uLerpLo, uMove;
+uniform float uPdRadius, uShrink, uShrinkMin, uShrinkMax;
+uniform sampler2D uGuideA;   // image: brightness, edge strength, contour direction x coherence (zw)
+uniform sampler2D uGuideB;   // image: uphill on blurred edges (xy), uphill on blurred darkness (zw)
+uniform int uGuideOn, uGuideSrc;               // source: 0 edges, 1 dark tones, 2 light tones
+uniform vec2 uImgHalf, uImgCenter;             // half the image size and its centre, world units (x, z)
+uniform float uThr, uSoft, uSteer, uPull;
+uniform sampler2D uSpeed;                      // @speed by ptnum (x): 1 at emit, multiplied down in the dark
+uniform int uDarkOn;                           // slow in dark on (only acts while the guide is on)
+uniform float uMinLum, uMultDark;              // min_lum, mult_in_dark
+uniform int uKMode;                            // 0 closest [1], 1 fit by pd [-1]
+uniform float uKA, uKB, uKExtra;
 layout(location=0) out vec4 oState;
 layout(location=1) out vec4 oInfo;   // angle, branch (1 = >hi, 2 = <lo, 3 = both), npt, distance (-1 = nothing in radius)
+layout(location=2) out vec4 oAttr;   // pd, pdn, shrink weight, image mask
+layout(location=3) out vec4 oSpeed;  // @speed
 
 vec2 safeNormalize(vec2 v){ float l = length(v); return l > 0.0 ? v / l : vec2(0.0); }   // VEX normalize(0) = 0
+// Squared distance, in cells, from P to the nearest edge of the cell at offset o from P's own cell (0 for its own and
+// touching rows), less a little slack for rounding. Every point in that cell is at least this far from P, so a cell whose
+// value is beyond the search radius can be skipped without reading its points: it could not have changed the result.
+float nearCells2(ivec2 o, vec2 fP, float slack){
+  vec2 g = max(abs(vec2(o)) - mix(1.0 - fP, fP, vec2(greaterThan(o, ivec2(0)))) - slack, 0.0);
+  return dot(g, g);
+}
+float fit01(float v, float a, float b){ return b > a ? clamp((v - a) / (b - a), 0.0, 1.0) : (v >= b ? 1.0 : 0.0); }   // fit(v, a, b, 0, 1)
+float sstep(float a, float b, float v){ if (b == a) return v >= a ? 1.0 : 0.0; float t = clamp((v - a) / (b - a), 0.0, 1.0); return t * t * (3.0 - 2.0 * t); }   // smooth(a, b, v); b < a runs backwards
 
 void main(){
   ivec2 fc = ivec2(gl_FragCoord.xy);
   int ptnum = fc.y * uTexW + fc.x;
-  if (ptnum >= uCount) { oState = vec4(0.0); oInfo = vec4(0.0); return; }
+  if (ptnum >= uCount) { oState = vec4(0.0); oInfo = vec4(0.0); oAttr = vec4(0.0); oSpeed = vec4(1.0); return; }
   vec4 me = texelFetch(uState, fc, 0);
   vec2 P = me.xy, N = me.zw;            // .y of these vec2s is the Z component
+  float speed = texelFetch(uSpeed, fc, 0).x;
+  bool slow = uDarkOn == 1 && uGuideOn == 1;
+  float spd = slow ? speed : 1.0;       // scales every move of @P below
 
-  // int npt = nearpoints(0, @P, .6, 2)[1];
-  // Nearest other point within the radius: search grid cells in growing square rings
-  // and stop once no unvisited cell can hold anything closer.
   ivec2 c = cellOf(P);
-  float best = uRadius * uRadius;
-  int bestS = -1, visits = 0;
+  vec2 pc = clamp(P / uH, vec2(-1e9), vec2(1e9));
+  vec2 fP = pc - floor(pc);                                          // where P sits inside its own cell, 0..1
+  float slack = 1e-4 + 1e-6 * max(abs(pc.x), abs(pc.y)), h2 = uH * uH;
+
+  // int pd = len(nearpoints(0, @P, chf("pd_radius"), chi("pd_max_num")));    points within pd_radius, itself included
+  // Grid cells are searched in growing square rings; this stops once pd_max_num is reached or the radius is covered.
+  float pr2 = uPdRadius >= 0.0 ? uPdRadius * uPdRadius : -1.0;   // a negative radius finds nothing
+  int pd = 0, visits = 0;
   for (int k = 0; k <= MAXRING; k++) {
-    if (k > uRings) break;
+    if (k > uRings || visits > MAXVISIT) break;
     int cells = k == 0 ? 1 : 8 * k;
     for (int j = 0; j < cells; j++) {
-      vec2 se = texelFetch(uRange, at(bucketOf(c + ringCell(k, j)), uTabW, uTabShift), 0).xy;
-      int s0 = int(se.x), s1 = int(se.y);
-      visits += s1 - s0;
-      for (int s = s0; s < s1; s++) {
-        vec2 d = texelFetch(uSorted, at(s, uTexW, uTexShift), 0).xy - P;
+      if (visits > MAXVISIT || pd >= uPdMax) break;
+      ivec2 o = ringCell(k, j), cc = c + o;
+      vec2 se = texelFetch(uRange, at(bucketOf(cc), uTabW, uTabShift), 0).xy;
+      if (nearCells2(o, fP, slack) * h2 > pr2) { visits += int(se.y) - int(se.x); continue; }   // nothing in it is within pd_radius
+      for (int s = int(se.x); s < int(se.y); s++) {
+        if (++visits > MAXVISIT) break;
+        vec2 q = texelFetch(uSorted, at(s, uTexW, uTexShift), 0).xy;
+        if (cellOf(q) != cc) continue;  // a different cell that shares this hash bucket
+        vec2 d = q - P;
+        if (dot(d, d) <= pr2) pd++;
+      }
+    }
+    if (pd >= uPdMax || float(k) * uH >= uPdRadius) break;
+  }
+  pd = min(pd, uPdMax);
+
+  // Which neighbour to read:
+  //   closest:  int npt = nearpoints(0, @P, .6, 2)[1];
+  //   fit:      int k = int(fit(@pd, a, b, 2, 2 + extra));  int npt = nearpoints(0, @P, .6, k)[-1];
+  // nearpoints() returns this point first, then the others by distance, so [-1] is the (k-1)th closest
+  // other point, or the farthest one inside the radius when fewer are found.
+  int K = 1;                                       // how many other points to collect: k - 1
+  if (uKMode == 1) K = int(2.0 + uKExtra * fit01(float(pd), uKA, uKB) + 1e-4) - 1;
+  bool selfRead = K < 1;                           // k <= 1: nearpoints() returns only this point, so [-1] is itself
+  K = clamp(K, 1, MAXK);                           // k tops out at MAXK + 1
+  float kd[MAXK];                                  // squared distances, closest first
+  int ks[MAXK];                                    // their slots in the sorted list
+  int kn = 0;
+  float R2 = uRadius >= 0.0 ? uRadius * uRadius : -1.0;
+  visits = selfRead ? MAXVISIT + 1 : 0;           // skip the search when the point reads itself
+  for (int k = 0; k <= MAXRING; k++) {
+    if (k > uRings || visits > MAXVISIT) break;
+    int cells = k == 0 ? 1 : 8 * k;
+    for (int j = 0; j < cells; j++) {
+      if (visits > MAXVISIT) break;
+      ivec2 o = ringCell(k, j), cc = c + o;
+      vec2 se = texelFetch(uRange, at(bucketOf(cc), uTabW, uTabShift), 0).xy;
+      float near2 = nearCells2(o, fP, slack) * h2;
+      if (near2 > R2 || (kn == K && near2 > kd[K - 1])) { visits += int(se.y) - int(se.x); continue; }   // every point in it would be skipped below
+      for (int s = int(se.x); s < int(se.y); s++) {
+        if (++visits > MAXVISIT) break;
+        vec2 q = texelFetch(uSorted, at(s, uTexW, uTexShift), 0).xy;
+        if (cellOf(q) != cc) continue;
+        vec2 d = q - P;
         float d2 = dot(d, d);
-        if (d2 < best || (bestS < 0 && d2 <= best)) {
-          if (d2 == 0.0 && int(texelFetch(uKeys, at(s, uTexW, uTexShift), 0).y) == ptnum) continue;  // itself, nearpoints()[0]
-          best = d2; bestS = s;
-        }
+        if (d2 > R2 || (kn == K && d2 >= kd[K - 1])) continue;
+        if (d2 == 0.0 && int(texelFetch(uKeys, at(s, uTexW, uTexShift), 0).y) == ptnum) continue;  // itself, nearpoints()[0]
+        if (kn < K) kn++;                          // insert in distance order, dropping the farthest when full
+        int m = kn - 1;
+        while (m > 0 && kd[m - 1] > d2) { kd[m] = kd[m - 1]; ks[m] = ks[m - 1]; m--; }
+        kd[m] = d2; ks[m] = s;
       }
     }
     float reach = float(k) * uH;        // every unvisited point is at least this far away
-    if ((bestS >= 0 && best <= reach * reach) || reach >= uRadius || visits > MAXVISIT) break;
+    if ((kn == K && kd[K - 1] <= reach * reach) || reach >= uRadius) break;
   }
 
-  int npt;
-  vec2 nN;
-  if (bestS >= 0) {
-    npt = int(texelFetch(uKeys, at(bestS, uTexW, uTexShift), 0).y);
+  int npt = -1;
+  vec2 nN = N;
+  bool rule = true;
+  float ndist = -1.0;
+  if (selfRead) { npt = ptnum; nN = N; ndist = 0.0; }
+  else if (kn > 0) {
+    int sl = ks[kn - 1];                   // [1] when k = 2; [-1] in fit mode
+    npt = int(texelFetch(uKeys, at(sl, uTexW, uTexShift), 0).y);
     // vector nN = point(0, "N", npt);
-    nN = texelFetch(uSorted, at(bestS, uTexW, uTexShift), 0).zw;
+    nN = texelFetch(uSorted, at(sl, uTexW, uTexShift), 0).zw;
+    ndist = sqrt(kd[kn - 1]);
   } else if (uLone == 0) {
-    // Nothing within the radius: nearpoints() returns only this point, [1] reads past the
-    // end of the array and VEX returns 0 for that, so npt = 0 and nN is point 0's N.
-    npt = 0;
-    nN = texelFetch(uState, ivec2(0), 0).zw;
-  } else {
-    oState = me;
-    oInfo = vec4(-1.0, 0.0, -1.0, -1.0);
-    return;
-  }
+    // Nothing else within the radius, so nearpoints() returns only this point.
+    if (uKMode == 1) { npt = ptnum; nN = N; }      // [-1] of that is the point itself
+    else {                                          // [1] reads past the end: VEX returns 0, so point 0's N
+      npt = 0;
+      nN = texelFetch(uState, ivec2(0), 0).zw;
+    }
+  } else rule = false;                  // "Leave as is": skip the angle rule for this point
 
-  // float x1 = @N.x; float x2 = nN.x; float y1 = @N.z; float y2 = nN.z;
-  float x1 = N.x, x2 = nN.x, y1 = N.y, y2 = nN.y;
-  // float dot = x1*x2 + y1*y2;
-  float dt = x1 * x2 + y1 * y2;
-  // float det = x1*y2 - y1*x2;
-  float det = x1 * y2 - y1 * x2;
-  // float angle = degrees(atan2(det, dot));
-  float angle = (dt == 0.0 && det == 0.0) ? 0.0 : degrees(atan(det, dt));
-  // angle %= 180.;   VEX % takes the sign of 180, like GLSL mod(): -10 becomes 170
-  angle = mod(angle, 180.0);
-
+  float angle = -1.0;
   int branch = 0;
-  // if(angle>70){ @N=lerp(@N,nN,0.032); @N=normalize(@N); @P-=@N*0.008; }
-  if (angle > uAngleHi) { N = safeNormalize(mix(N, nN, uLerpHi)); P -= N * uMove; branch |= 1; }
-  // if(angle<45.2){ @N=lerp(@N,nN,0.0325); @N=normalize(@N); @P+=@N*0.008; }
-  if (angle < uAngleLo) { N = safeNormalize(mix(N, nN, uLerpLo)); P += N * uMove; branch |= 2; }
+  if (rule) {
+    // float x1 = @N.x; float x2 = nN.x; float y1 = @N.z; float y2 = nN.z;
+    float x1 = N.x, x2 = nN.x, y1 = N.y, y2 = nN.y;
+    // float dot = x1*x2 + y1*y2;
+    float dt = x1 * x2 + y1 * y2;
+    // float det = x1*y2 - y1*x2;
+    float det = x1 * y2 - y1 * x2;
+    // float angle = degrees(atan2(det, dot));
+    angle = (dt == 0.0 && det == 0.0) ? 0.0 : degrees(atan(det, dt));
+    // angle %= 180.;   VEX % takes the sign of 180, like GLSL mod(): -10 becomes 170
+    angle = mod(angle, 180.0);
+
+    // if(angle>70){ @N=lerp(@N,nN,0.032); @N=normalize(@N); @P-=@N*0.008; }
+    if (angle > uAngleHi) { N = safeNormalize(mix(N, nN, uLerpHi)); P -= N * uMove * spd; branch |= 1; }
+    // if(angle<45.2){ @N=lerp(@N,nN,0.0325); @N=normalize(@N); @P+=@N*0.008; }
+    if (angle < uAngleLo) { N = safeNormalize(mix(N, nN, uLerpLo)); P += N * uMove * spd; branch |= 2; }
+  }
   // @N = normalize(@N);
   N = safeNormalize(N);
 
+  // Image guide: over the strong parts of the image, turn N along the image's contours
+  // and pull P toward them. Does nothing when no image is loaded or the guide is off.
+  float mask = 0.0;
+  if (uGuideOn == 1) {
+    vec2 uv = (P - uImgCenter) / (2.0 * uImgHalf) + 0.5;   // the image's top edge is toward -Z
+    if (uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) {
+      vec4 A = texture(uGuideA, uv);
+      vec4 B = texture(uGuideB, uv);
+      float v = uGuideSrc == 0 ? A.y : (uGuideSrc == 1 ? 1.0 - A.x : A.x);
+      // mask = smoothstep(thr, thr + soft, edge or tone)
+      mask = sstep(uThr, uThr + uSoft, v);
+      // @N = lerp(@N, contour, mask * steer);  weighted by how clearly the contour has one direction
+      float coh = length(A.zw);
+      if (coh > 1e-4) {
+        vec2 t = A.zw / coh;
+        if (dot(t, N) < 0.0) t = -t;                 // a contour runs both ways: take the side N already faces
+        N = safeNormalize(mix(N, t, mask * uSteer * coh));
+      }
+      // @P += pull * uphill on the blurred edges (or tones), so points gather on the lines
+      P += (uGuideSrc == 0 ? B.xy : (uGuideSrc == 1 ? B.zw : -B.zw)) * sign(uImgHalf) * uPull * spd;
+    }
+  }
+  // Slow in dark: if(@mask < chf("min_lum")) @speed *= chf("mult_in_dark");
+  // Outside the image the mask is 0, so that counts as dark too. Speed carries over to the next step.
+  if (slow && mask < uMinLum) speed *= uMultDark;
+  speed = clamp(speed, -1000.0, 1000.0);   // keeps mult_in_dark above 1 from running off to infinity
+
+  // @pdn = fit(@pd, 1, chi("pd_max_num"), 0, 1);      pd counts the point itself, so 1 means alone
+  float pdn = uPdMax > 1 ? clamp(float(pd - 1) / float(uPdMax - 1), 0.0, 1.0) : 0.0;
+  // @N += @N * lerp(1, chf("shrink"), fit(@pdn, chf("shrink_pd_min"), chf("shrink_pd_max"), 0, 1));
+  float w = fit01(pdn, uShrinkMin, uShrinkMax);
+  N += N * mix(1.0, uShrink, w);
+
   oState = uApply == 1 ? vec4(P, N) : me;
-  oInfo = vec4(angle, float(branch), float(npt), bestS >= 0 ? sqrt(best) : -1.0);
+  oInfo = vec4(angle, float(branch), float(npt), ndist);
+  oAttr = vec4(float(pd), pdn, w, mask);
+  oSpeed = vec4(uApply == 1 ? speed : texelFetch(uSpeed, fc, 0).x, 0.0, 0.0, 0.0);
+}`;
+
+// Click: new random N for the points inside the circle
+const FS_BRUSH = `
+// Click: points inside the circle get a new random N, made the same way as at emit,
+// and full @speed again. The seed changes on every click, so clicking the same spot again gives new directions.
+uniform sampler2D uState, uSpeed;
+uniform int uCount, uTexW, uSeed;
+uniform vec2 uCenter;      // clicked point (x, z)
+uniform float uRadius;     // circle radius in world units (75 px on screen)
+layout(location=0) out vec4 oState;
+layout(location=1) out vec4 oSpeed;
+
+uint hash(uint x){ x ^= x >> 16; x *= 0x7feb352du; x ^= x >> 15; x *= 0x846ca68bu; x ^= x >> 16; return x; }
+float rand01(uint x){ return float(hash(x) >> 8) * (1.0 / 16777216.0); }
+
+void main(){
+  ivec2 fc = ivec2(gl_FragCoord.xy);
+  int ptnum = fc.y * uTexW + fc.x;
+  vec4 me = texelFetch(uState, fc, 0);
+  oSpeed = texelFetch(uSpeed, fc, 0);
+  if (ptnum >= uCount || distance(me.xy, uCenter) > uRadius) { oState = me; return; }
+  oSpeed = vec4(1.0, 0.0, 0.0, 0.0);    // @speed = 1
+  // @N = fit01(rand(@ptnum + seed), -{1,1,1}, {1,1,1}); @N.y = 0; @N = normalize(@N);
+  uint s = uint(ptnum) * 3u + uint(uSeed) * 0x9e3779b9u;
+  vec3 N = mix(vec3(-1.0), vec3(1.0), vec3(rand01(s), rand01(s + 1u), rand01(s + 2u)));
+  N.y = 0.0;
+  N = length(N) > 0.0 ? normalize(N) : vec3(0.0);
+  oState = vec4(me.xy, N.x, N.z);
 }`;
 
 // Neighbour grid, rebuilt before every step.
@@ -442,32 +672,76 @@ void main(){
   vec2 p = texelFetch(uState, fc, 0).xy;
   o = vec4(float(bucketOf(cellOf(p))), float(i), 0.0, 0.0);
 }`;
-const FS_SORT = `
-// Pass 2: one bitonic merge step on (bucket, ptnum) pairs; run log2(n)*(log2(n)+1)/2 times
-uniform sampler2D uKeys; uniform int uK, uJ, uTexW, uTexShift;
-out vec4 o;
+// Pass 2: bitonic sort of the (bucket, ptnum) pairs. The network is the plain one, log2(n)*(log2(n)+1)/2 compare-exchange
+// layers, but one pass runs up to SORT_FUSE layers in a row: each fragment loads the group of keys those layers touch,
+// does the same compare-exchanges in registers and keeps its own slot. Same result, about a third of the passes.
+const SORT_FUSE = 3;
+// bits: group size is 2^bits keys, spaced 2^uLow apart. layers: [j bit, k bit] relative to uLow, in network order;
+// a k bit at or above bits means the merge direction comes from outside the group (uK).
+function sortSrc(bits, layers){
+  const n = 1 << bits, L = [
+    `// Pass 2: bitonic merge, ${layers.length} layer${layers.length > 1 ? 's' : ''} of the network in one pass, on groups of ${n} keys`,
+    'uniform sampler2D uKeys; uniform int uK, uLow, uTexW, uTexShift;',
+    'out vec4 o;',
+    'bool lt(vec2 a, vec2 b){ return a.x < b.x || (a.x == b.x && a.y < b.y); }',
+    'vec2 key(int i){ return texelFetch(uKeys, ivec2(i & (uTexW - 1), i >> uTexShift), 0).xy; }',
+    'void main(){',
+    '  ivec2 fc = ivec2(gl_FragCoord.xy); int i = fc.y * uTexW + fc.x;',
+    `  int mask = ${n - 1} << uLow, base = i & ~mask, me = (i & mask) >> uLow;`,
+    '  bool up = (base & uK) == 0;                // ascending merge, when the direction bit lies above the group',
+  ];
+  for (let t = 0; t < n; t++) L.push(`  vec2 v${t} = key(base | (${t} << uLow));`);
+  for (const [jb, kb] of layers) {
+    L.push(`  // layer: partner = i ^ ${1 << jb}${kb >= bits ? ', direction from uK' : `, direction from bit ${kb}`}`);
+    for (let t = 0; t < n; t++) {
+      if (t >> jb & 1) continue;
+      const u = t | 1 << jb;   // lower slot keeps the smaller key when the merge is ascending
+      const swap = kb >= bits ? `up ? lt(v${u}, v${t}) : lt(v${t}, v${u})` : (t >> kb & 1) ? `lt(v${t}, v${u})` : `lt(v${u}, v${t})`;
+      L.push(`  if (${swap}) { vec2 x = v${t}; v${t} = v${u}; v${u} = x; }`);
+    }
+  }
+  L.push('  vec2 r = v0;');
+  for (let t = 1; t < n; t++) L.push(`  if (me == ${t}) r = v${t};`);
+  L.push('  o = vec4(r, 0.0, 0.0);', '}');
+  return L.join('\n');
+}
+const sortProgs = new Map();
+// Which passes sort `total` keys: consecutive layers are put in one pass while their partner bits span at most SORT_FUSE bits
+function sortPlan(total){
+  const layers = [];
+  for (let k = 2; k <= total; k <<= 1) for (let j = k >> 1; j > 0; j >>= 1) layers.push([Math.log2(k), Math.log2(j)]);
+  const groups = [];
+  for (const [kb, jb] of layers) {
+    const g = groups[groups.length - 1];
+    if (g && Math.max(g.hi, jb) - Math.min(g.lo, jb) < SORT_FUSE) { g.hi = Math.max(g.hi, jb); g.lo = Math.min(g.lo, jb); g.layers.push([kb, jb]); }
+    else groups.push({ lo: jb, hi: jb, layers: [[kb, jb]] });
+  }
+  return groups.map(g => {
+    const bits = g.hi - g.lo + 1, rel = g.layers.map(([kb, jb]) => [jb - g.lo, kb - g.lo]);
+    const outside = [...new Set(g.layers.filter(([kb]) => kb - g.lo >= bits).map(([kb]) => kb))];
+    if (outside.length > 1) throw new Error('sort plan: two merge directions in one pass');
+    const id = bits + ':' + rel.map(([j, k]) => j + '/' + (k >= bits ? 'u' : k)).join(',');
+    if (!sortProgs.has(id)) sortProgs.set(id, program(VS_QUAD, HDR + sortSrc(bits, rel)));
+    return { prog: sortProgs.get(id), uK: outside.length ? 1 << outside[0] : 0, uLow: g.lo };
+  });
+}
+const VS_RANGE = `
+// Pass 3: for every bucket, where it starts and ends in the sorted list. Drawn as one point per sorted key:
+// the first key of a run of equal buckets writes its index into that bucket's texel (.x, start), and in a second
+// draw the last one writes index + 1 (.y, end). The table is cleared to 0, 0 first, so empty buckets read as empty.
+uniform sampler2D uKeys; uniform int uCount, uTexW, uTexShift, uTabW, uTabShift, uEnd; uniform vec2 uTabSize;
+flat out float vVal;
+float bucketAt(int i){ return texelFetch(uKeys, at(i, uTexW, uTexShift), 0).x; }
 void main(){
-  ivec2 fc = ivec2(gl_FragCoord.xy); int i = fc.y * uTexW + fc.x; int p = i ^ uJ;
-  vec2 a = texelFetch(uKeys, fc, 0).xy;
-  vec2 b = texelFetch(uKeys, ivec2(p & (uTexW - 1), p >> uTexShift), 0).xy;
-  bool aLess = a.x < b.x || (a.x == b.x && a.y < b.y);
-  bool keepMin = ((i & uK) == 0) == (i < p);
-  o = vec4(keepMin ? (aLess ? a : b) : (aLess ? b : a), 0.0, 0.0);
+  int i = gl_VertexID; float b = bucketAt(i);
+  bool edge = uEnd == 0 ? (i == 0 || bucketAt(i - 1) != b) : (i == uCount - 1 || bucketAt(i + 1) != b);
+  gl_PointSize = 1.0; vVal = float(uEnd == 0 ? i : i + 1);
+  if (!edge) { gl_Position = vec4(2.0, 2.0, 0.0, 1.0); return; }    // outside the table: draws nothing
+  gl_Position = vec4((vec2(at(int(b), uTabW, uTabShift)) + 0.5) / uTabSize * 2.0 - 1.0, 0.0, 1.0);
 }`;
 const FS_RANGE = `
-// Pass 3: for every bucket, where it starts and ends in the sorted list (binary search)
-uniform sampler2D uKeys; uniform int uCount, uTexW, uTexShift, uTabW;
-out vec4 o;
-int lowerBound(float b, int lo){
-  int hi = uCount;
-  while (lo < hi) { int m = (lo + hi) >> 1; if (texelFetch(uKeys, at(m, uTexW, uTexShift), 0).x < b) lo = m + 1; else hi = m; }
-  return lo;
-}
-void main(){
-  ivec2 fc = ivec2(gl_FragCoord.xy); float b = float(fc.y * uTabW + fc.x);
-  int s = lowerBound(b, 0); int e = lowerBound(b + 1.0, s);
-  o = vec4(float(s), float(e), 0.0, 0.0);
-}`;
+flat in float vVal; out vec4 o;
+void main(){ o = vec4(vVal, vVal, 0.0, 0.0); }   // the colour mask picks .x or .y`;
 const FS_REORDER = `
 // Pass 4: copy P and N into sorted order so points in one bucket sit next to each other
 uniform sampler2D uKeys, uState; uniform int uTexW, uTexShift;
@@ -477,9 +751,9 @@ void main(){
   o = texelFetch(uState, at(i, uTexW, uTexShift), 0);
 }`;
 
-// Stats: counts of each branch, 2x2 reduction down to one texel
+// Stats: how many points take each branch, have pdn above shrink_pd_min, or have nothing in radius; 2x2 reduction down to one texel
 const FS_REDUCE = HDR + `
-uniform sampler2D uSrc; uniform ivec2 uSrcSize; uniform int uFirst, uCount, uTexW;
+uniform sampler2D uSrc, uAttr; uniform ivec2 uSrcSize; uniform int uFirst, uCount, uTexW;
 out vec4 o;
 void main(){
   ivec2 fc = ivec2(gl_FragCoord.xy); vec4 sum = vec4(0.0);
@@ -489,7 +763,8 @@ void main(){
     if (uFirst == 1) {
       if (s.y * uTexW + s.x >= uCount) continue;
       vec4 inf = texelFetch(uSrc, s, 0); int f = int(inf.y + 0.5);
-      sum += vec4((f & 2) != 0 ? 1.0 : 0.0, (f & 1) != 0 ? 1.0 : 0.0, f == 0 ? 1.0 : 0.0, inf.w < 0.0 ? 1.0 : 0.0);
+      float w = texelFetch(uAttr, s, 0).z;
+      sum += vec4((f & 2) != 0 ? 1.0 : 0.0, (f & 1) != 0 ? 1.0 : 0.0, w > 0.0 ? 1.0 : 0.0, inf.w < 0.0 ? 1.0 : 0.0);
     } else sum += texelFetch(uSrc, s, 0);
   }
   o = sum;
@@ -497,21 +772,23 @@ void main(){
 
 // Drawing: Houdini Top view, X right and Z down
 const VS_POINTS = HDR + `
-uniform sampler2D uState, uInfo, uRamp;
+uniform sampler2D uState, uInfo, uAttr, uRamp;
 uniform int uTexW, uTexShift, uColorBy, uLines;
 uniform vec2 uCam, uScale;
 uniform float uPointSize, uNLen;
 uniform vec3 uFwd, uBack, uBoth, uIdle;
 out vec3 vCol;
+vec3 ramp(float t){ return texture(uRamp, vec2((clamp(t, 0.0, 1.0) * 255.0 + 0.5) / 256.0, 0.5)).rgb; }
 void main(){
   int id = uLines == 1 ? (gl_VertexID >> 1) : gl_VertexID;
   ivec2 t = ivec2(id & (uTexW - 1), id >> uTexShift);
   vec4 s = texelFetch(uState, t, 0);
   vec4 inf = texelFetch(uInfo, t, 0);
   vec3 col;
-  if (uColorBy == 0) col = texture(uRamp, vec2(atan(s.w, s.z) * 0.15915494 + 0.5, 0.5)).rgb;
-  else if (uColorBy == 1) { int f = int(inf.y + 0.5); col = f == 2 ? uFwd : f == 1 ? uBack : f == 3 ? uBoth : uIdle; }
-  else col = inf.x < 0.0 ? uIdle : texture(uRamp, vec2(inf.x / 180.0, 0.5)).rgb;
+  if (uColorBy == 0) col = ramp(texelFetch(uAttr, t, 0).y);                       // pdn
+  else if (uColorBy == 1) col = ramp(atan(s.w, s.z) * 0.15915494 + 0.5);          // N direction, once round = 0..1
+  else if (uColorBy == 2) { int f = int(inf.y + 0.5); col = f == 2 ? uFwd : f == 1 ? uBack : f == 3 ? uBoth : uIdle; }
+  else col = inf.x < 0.0 ? uIdle : ramp(inf.x / 180.0);                           // angle 0..180
   vec2 p = s.xy;
   if (uLines == 1 && (gl_VertexID & 1) == 1) p += s.zw * uNLen;
   gl_Position = vec4((p.x - uCam.x) * uScale.x, -(p.y - uCam.y) * uScale.y, 0.0, 1.0);
@@ -541,42 +818,71 @@ void main(){
   o = c;
 }`;
 const FS_FADE = HDR + `uniform vec4 uColor; out vec4 o; void main(){ o = uColor; }`;
-const FS_BLIT = HDR + `uniform sampler2D uSrc; out vec4 o; void main(){ o = vec4(texelFetch(uSrc, ivec2(gl_FragCoord.xy), 0).rgb, 1.0); }`;
+const FS_BLIT = HDR + `
+uniform sampler2D uSrc, uGuideA; uniform int uOverlay, uGuideSrc, uInvert; uniform float uAlpha, uPpu, uThr, uSoft;
+float sstep(float a, float b, float v){ if (b == a) return v >= a ? 1.0 : 0.0; float t = clamp((v - a) / (b - a), 0.0, 1.0); return t * t * (3.0 - 2.0 * t); }
+uniform vec2 uCam, uFrame, uImgHalf, uImgCenter; uniform vec3 uTint;
+out vec4 o;
+void main(){
+  vec3 c = texelFetch(uSrc, ivec2(gl_FragCoord.xy), 0).rgb;
+  if (uInvert == 1) c = 1.0 - clamp(c, 0.0, 1.0);          // full invert: off-white background, dark points, hues flipped too
+  else if (uInvert == 2) {                                 // flip HSL lightness only: same hue and saturation
+    c = clamp(c, 0.0, 1.0);
+    c += 1.0 - (max(c.r, max(c.g, c.b)) + min(c.r, min(c.g, c.b)));
+  }
+  if (uOverlay > 0) {                       // faint image or mask under the points, for lining things up
+    vec2 w = uCam + vec2(gl_FragCoord.x - 0.5 * uFrame.x, 0.5 * uFrame.y - gl_FragCoord.y) / uPpu;
+    vec2 uv = (w - uImgCenter) / (2.0 * uImgHalf) + 0.5;
+    if (uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0) {
+      vec4 A = texture(uGuideA, uv);
+      float v = uGuideSrc == 0 ? A.y : (uGuideSrc == 1 ? 1.0 - A.x : A.x);
+      float m = sstep(uThr, uThr + uSoft, v) * uAlpha;
+      if (uInvert == 0) c += uOverlay == 1 ? vec3(A.x) * uAlpha : uTint * m;           // dark view: add light
+      else c *= uOverlay == 1 ? vec3(mix(1.0, A.x, uAlpha)) : mix(vec3(1.0), uTint, m);  // light view: darken, like ink
+    }
+  }
+  o = vec4(c, 1.0);
+}`;
 
 let PR;
 try {
   PR = {
     init: program(VS_QUAD, HDR + FS_INIT),
-    key: program(VS_QUAD, HDR + COMMON + FS_KEY), sort: program(VS_QUAD, HDR + FS_SORT),
-    range: program(VS_QUAD, HDR + COMMON + FS_RANGE), reorder: program(VS_QUAD, HDR + COMMON + FS_REORDER),
-    sim: program(VS_QUAD, HDR + COMMON + FS_SIM), reduce: program(VS_QUAD, FS_REDUCE),
+    key: program(VS_QUAD, HDR + COMMON + FS_KEY),
+    range: program(HDR + COMMON + VS_RANGE, HDR + FS_RANGE), reorder: program(VS_QUAD, HDR + COMMON + FS_REORDER),
+    sim: program(VS_QUAD, HDR + COMMON + FS_SIM), reduce: program(VS_QUAD, FS_REDUCE), brush: program(VS_QUAD, HDR + FS_BRUSH),
     points: program(VS_POINTS, FS_POINTS), mark: program(VS_MARK, FS_MARK),
     fade: program(VS_QUAD, FS_FADE), blit: program(VS_QUAD, FS_BLIT),
   };
+  sortPlan(1 << 20);     // compiles every pass shape the sort can need, up to the largest particle count
 } catch (e) { fatal('A shader failed to compile on this GPU: ' + e.message); return; }
 
 /* ------------------------------------------------------------------ simulation state */
 const S = {
   count: 0, cols: 0, rows: 0, size: 10, total: 0, texW: 0, texH: 0, shift: 0,
   tabW: 0, tabH: 0, tabSize: 0, h: 0.04, rings: 1,
-  cur: 0, frame: 0, acc: 0,
-  state: [], info: null, keys: [], keysFbo: [], simFbo: [], sorted: null, sortedFbo: null, range: null, rangeFbo: null,
+  cur: 0, frame: 0, acc: 0, clicks: 0,
+  state: [], speed: [], info: null, attr: null, keys: [], keysFbo: [], simFbo: [], brushFbo: [], sorted: null, sortedFbo: null, range: null, rangeFbo: null,
   reduce: [], counts: null, stats: [0, 0, 0, 0],
   frameTex: null, frameFbo: null, fw: 0, fh: 0,
-  ramp: null, needClear: true, infoDirty: false,
+  ramp: null, needClear: true, infoDirty: false, flashUntil: 0, flashPending: false,
 };
 const nextPow2 = n => { let p = 1; while (p < n) p <<= 1; return p; };
 const del = list => list.forEach(o => { if (!o) return; if (o instanceof WebGLTexture) gl.deleteTexture(o); else gl.deleteFramebuffer(o); });
 
 function allocParticles(total){
-  del([...S.state, S.info, ...S.keys, ...S.keysFbo, ...S.simFbo, S.sorted, S.sortedFbo, S.range, S.rangeFbo, ...S.reduce.flatMap(l => [l.tex, l.fbo])]);
+  del([...S.state, ...S.speed, S.info, S.attr, ...S.keys, ...S.keysFbo, ...S.simFbo, ...S.brushFbo, S.sorted, S.sortedFbo, S.range, S.rangeFbo, ...S.reduce.flatMap(l => [l.tex, l.fbo])]);
   const shift = Math.ceil(Math.log2(total) / 2), texW = 1 << shift, texH = total / texW;
   Object.assign(S, { total, texW, texH, shift, tabW: texW, tabH: texH * 2, tabSize: total * 2 });
   S.state = [texture(texW, texH, 'rgba32f'), texture(texW, texH, 'rgba32f')];
   S.info = texture(texW, texH, 'rgba32f');
+  S.attr = texture(texW, texH, 'rgba32f');      // pd, pdn, shrink weight
+  S.speed = [texture(texW, texH, 'rg32f'), texture(texW, texH, 'rg32f')];   // @speed, ping-pongs with state
   S.keys = [texture(texW, texH, 'rg32f'), texture(texW, texH, 'rg32f')];
+  S.sortPlan = sortPlan(total);
   S.keysFbo = S.keys.map(t => framebuffer(t));
-  S.simFbo = [0, 1].map(j => framebuffer(S.state[j], S.info));
+  S.simFbo = [0, 1].map(j => framebuffer(S.state[j], S.info, S.attr, S.speed[j]));
+  S.brushFbo = [0, 1].map(j => framebuffer(S.state[j], S.speed[j]));
   S.sorted = texture(texW, texH, 'rgba32f'); S.sortedFbo = framebuffer(S.sorted);
   S.range = texture(S.tabW, S.tabH, 'rg32f'); S.rangeFbo = framebuffer(S.range);
   S.reduce = [];
@@ -588,11 +894,11 @@ function allocParticles(total){
   S.counts = S.reduce[S.reduce.length - 1].tex;
 }
 
-// Search-grid cell: a bit over the starting point spacing, never so small that the radius needs more than 48 rings
+// Search-grid cell: a bit over the starting point spacing, never so small that the larger radius needs more than 48 rings
 function updateSearchGrid(){
-  const spacing = S.size / Math.max(1, S.cols - 1);
-  S.h = Math.max(spacing * 1.25, P.radius / 48, 1e-5);
-  S.rings = Math.min(64, Math.ceil(P.radius / S.h));
+  const spacing = S.size / Math.max(1, S.cols - 1), R = Math.max(P.radius, P.pdRadius);
+  S.h = Math.max(spacing * 1.25, R / 48, 1e-5);
+  S.rings = Math.max(0, Math.min(64, Math.ceil(R / S.h)));
 }
 
 function emit(){
@@ -604,9 +910,10 @@ function emit(){
   Object.assign(S, { count, cols: side, rows: side, size: P.size, cur: 0, frame: 0, acc: 0 });
   updateSearchGrid();
   gl.disable(gl.BLEND);
-  run(PR.init, S.simFbo[0], S.texW, S.texH, { uCount: count, uTexW: S.texW, uCols: side, uRows: side, uSeed: P.seed | 0, uSize: P.size });
+  run(PR.init, S.simFbo[0], S.texW, S.texH, { uCount: count, uTexW: S.texW, uCols: side, uRows: side, uSeed: (P.seed | 0) & 0x7fffffff, uSize: P.size });
   if (inspectId >= count) inspectId = 0;
   S.needClear = true;
+  drawPreview();            // the grid outline on the image preview depends on the grid size
   solve(false);            // which branch each point takes on the grid, without moving anything
   return sizeChanged;
 }
@@ -618,13 +925,16 @@ function solve(apply){
   // neighbour grid: bucket, sort, bucket ranges, sorted copy of P and N
   run(PR.key, S.keysFbo[0], texW, texH, { ...common, uState: S.state[S.cur], uCount: count, uTexW: texW });
   let src = 0;
-  for (let k = 2; k <= total; k <<= 1)
-    for (let j = k >> 1; j > 0; j >>= 1) {
-      run(PR.sort, S.keysFbo[1 - src], texW, texH, { uKeys: S.keys[src], uK: k, uJ: j, uTexW: texW, uTexShift: shift });
-      src = 1 - src;
-    }
+  for (const ps of S.sortPlan) {
+    run(ps.prog, S.keysFbo[1 - src], texW, texH, { uKeys: S.keys[src], uK: ps.uK, uLow: ps.uLow, uTexW: texW, uTexShift: shift });
+    src = 1 - src;
+  }
   const keys = S.keys[src];
-  run(PR.range, S.rangeFbo, S.tabW, S.tabH, { ...common, uKeys: keys, uCount: count, uTexW: texW, uTexShift: shift, uTabW: S.tabW });
+  gl.bindFramebuffer(gl.FRAMEBUFFER, S.rangeFbo); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+  const rangeU = { uKeys: keys, uCount: count, uTexW: texW, uTexShift: shift, uTabW: S.tabW, uTabShift: shift, uTabSize: [S.tabW, S.tabH] };
+  gl.colorMask(true, false, false, false); run(PR.range, S.rangeFbo, S.tabW, S.tabH, { ...rangeU, uEnd: 0 }, gl.POINTS, count);
+  gl.colorMask(false, true, false, false); run(PR.range, S.rangeFbo, S.tabW, S.tabH, { ...rangeU, uEnd: 1 }, gl.POINTS, count);
+  gl.colorMask(true, true, true, true);
   run(PR.reorder, S.sortedFbo, texW, texH, { ...common, uKeys: keys, uState: S.state[S.cur], uTexW: texW, uTexShift: shift });
 
   // the wrangle
@@ -634,30 +944,722 @@ function solve(apply){
     uCount: count, uTexW: texW, uTexShift: shift, uTabW: S.tabW, uTabShift: shift, uRings: S.rings,
     uApply: apply ? 1 : 0, uLone: P.lone === 'vex' ? 0 : 1,
     uRadius: P.radius, uAngleHi: P.angle, uAngleLo: P.low, uLerpHi: P.lerpHigh, uLerpLo: P.lerpLow, uMove: P.move,
+    uPdRadius: P.pdRadius, uPdMax: Math.max(1, Math.round(P.pdMax)), uShrink: P.shrink, uShrinkMin: P.shrinkMin, uShrinkMax: P.shrinkMax,
+    uGuideA: G.texA, uGuideB: G.texB, uGuideOn: G.on && P.guide === 'on' ? 1 : 0, uGuideSrc: { edges: 0, dark: 1, light: 2 }[P.follow],
+    uImgHalf: imgHalf(), uImgCenter: imgCenter(), uThr: P.thr, uSoft: P.soft, uSteer: P.steer, uPull: P.pull,
+    uSpeed: S.speed[S.cur], uDarkOn: P.darkSlow === 'on' ? 1 : 0, uMinLum: P.minLum, uMultDark: P.multDark,
+    uKMode: P.kMode === 'fit' ? 1 : 0, uKA: P.kA, uKB: P.kB, uKExtra: P.kExtra,
   });
   S.cur = nxt;
   if (apply) S.frame++;
+  S.infoDirty = false;
+}
 
-  // branch counts
+// Counts for the HUD, from the latest step. Run only when the HUD reads them, not after every step.
+function reduceStats(){
+  const { texW, texH, count } = S;
+  gl.disable(gl.BLEND);
   let s = S.info, sw = texW, sh = texH, first = 1;
   for (const l of S.reduce) {
-    run(PR.reduce, l.fbo, l.w, l.h, { uSrc: s, uSrcSize: [sw, sh], uFirst: first, uCount: count, uTexW: texW });
+    run(PR.reduce, l.fbo, l.w, l.h, { uSrc: s, uAttr: S.attr, uSrcSize: [sw, sh], uFirst: first, uCount: count, uTexW: texW });
     s = l.tex; sw = l.w; sh = l.h; first = 0;
   }
-  S.infoDirty = false;
+}
+
+// Click: new random N inside a circle of P.brush screen pixels around (cx, cy)
+function randomizeAt(cx, cy){
+  const r = canvas.getBoundingClientRect();
+  const wx = cam.x + ((cx - r.left) * dpr - S.fw / 2) / cam.ppu, wz = cam.y + ((cy - r.top) * dpr - S.fh / 2) / cam.ppu;
+  const nxt = 1 - S.cur;
+  gl.disable(gl.BLEND);
+  run(PR.brush, S.brushFbo[nxt], S.texW, S.texH, {
+    uState: S.state[S.cur], uSpeed: S.speed[S.cur], uCount: S.count, uTexW: S.texW,
+    uSeed: (((P.seed | 0) * 7919 + (++S.clicks) * 104729 + 1) | 0) & 0x7fffffff,
+    uCenter: [wx, wz], uRadius: P.brush * dpr / cam.ppu,
+  });
+  S.cur = nxt;
+  if (!P.playing) S.infoDirty = true;
 }
 
 /* ------------------------------------------------------------------ colour */
 const hexRgb = h => { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
 const hex01 = h => hexRgb(h).map(v => v / 255);
-function buildRamp(){
-  const stops = RAMP_STOPS.map(hexRgb), n = stops.length, data = new Uint8Array(256 * 4);
-  for (let i = 0; i < 256; i++) {
-    const t = i / 256 * n, k = Math.floor(t), f = t - k, a = stops[k % n], b = stops[(k + 1) % n];
-    for (let c = 0; c < 3; c++) data[i*4+c] = Math.round(a[c] * (1 - f) + b[c] * f);
-    data[i*4+3] = 255;
+const toHex = c => '#' + c.map(v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join('');
+const rampKeys = () => P.ramps[P.colorBy] || P.ramps.pdn;
+function sampleRamp(keys, t){
+  const k = [...keys].sort((a, b) => a.p - b.p);
+  if (t <= k[0].p) return hexRgb(k[0].c);
+  for (let i = 0; i < k.length - 1; i++) if (t <= k[i + 1].p) {
+    const a = hexRgb(k[i].c), b = hexRgb(k[i + 1].c), span = k[i + 1].p - k[i].p, f = span > 0 ? (t - k[i].p) / span : 1;
+    return a.map((v, j) => v + (b[j] - v) * f);
   }
-  S.ramp = texture(256, 1, 'rgba8', data, gl.LINEAR, gl.REPEAT);
+  return hexRgb(k[k.length - 1].c);
+}
+function buildRamp(){
+  const keys = rampKeys(), data = new Uint8Array(256 * 4);
+  for (let i = 0; i < 256; i++) { const c = sampleRamp(keys, i / 255); data.set([Math.round(c[0]), Math.round(c[1]), Math.round(c[2]), 255], i * 4); }
+  if (S.ramp) gl.deleteTexture(S.ramp);
+  S.ramp = texture(256, 1, 'rgba8', data, gl.LINEAR, gl.CLAMP_TO_EDGE);
+}
+
+/* ------------------------------------------------------------------ image guide */
+// The image is turned into two textures the solver samples:
+//   A = (brightness, edge strength 0..1, contour direction x coherence)
+//   B = (uphill on blurred edge strength, uphill on blurred darkness), each scaled to length <= 1
+const G = { on: false, name: '', w: 1, h: 1, lum: null, edge: null, texA: null, texB: null };
+G.texA = texture(1, 1, 'rgba16f32', new Float32Array(4), gl.LINEAR);
+G.texB = texture(1, 1, 'rgba16f32', new Float32Array(4), gl.LINEAR);
+
+function gauss(src, w, h, sigma){
+  const r = Math.max(1, Math.ceil(sigma * 3)), k = new Float32Array(2 * r + 1);
+  let s = 0;
+  for (let i = -r; i <= r; i++) { k[i + r] = Math.exp(-i * i / (2 * sigma * sigma)); s += k[i + r]; }
+  for (let i = 0; i < k.length; i++) k[i] /= s;
+  const tmp = new Float32Array(w * h), out = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let a = 0; for (let i = -r; i <= r; i++) a += src[y * w + Math.min(w - 1, Math.max(0, x + i))] * k[i + r];
+    tmp[y * w + x] = a;
+  }
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let a = 0; for (let i = -r; i <= r; i++) a += tmp[Math.min(h - 1, Math.max(0, y + i)) * w + x] * k[i + r];
+    out[y * w + x] = a;
+  }
+  return out;
+}
+function gradient(f, w, h){
+  const gx = new Float32Array(w * h), gy = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = y * w + x;
+    gx[i] = (f[y * w + Math.min(w - 1, x + 1)] - f[y * w + Math.max(0, x - 1)]) * 0.5;
+    gy[i] = (f[Math.min(h - 1, y + 1) * w + x] - f[Math.max(0, y - 1) * w + x]) * 0.5;
+  }
+  return [gx, gy];
+}
+function percentile(arr, q){
+  const step = Math.max(1, Math.floor(arr.length / 20000)), s = [];
+  for (let i = 0; i < arr.length; i += step) s.push(arr[i]);
+  s.sort((a, b) => a - b);
+  return Math.max(1e-6, s[Math.min(s.length - 1, Math.floor(q * s.length))]);
+}
+/* ------------------------------------------------------------------ image files */
+// The browser itself decodes JPEG, PNG, GIF, WebP, AVIF, BMP, ICO and SVG (and HEIC in Safari).
+// TIFF, TGA, Radiance HDR and OpenEXR are decoded here, so they open in every browser.
+// A file's kind is read from its first bytes, so a missing or wrong extension or type does not matter.
+const IMAGE_ACCEPT = 'image/*,.jpg,.jpeg,.jpe,.jfif,.pjpeg,.pjp,.png,.apng,.gif,.webp,.avif,.bmp,.dib,.ico,.cur,.svg,.tif,.tiff,.heic,.heif,.hif,.tga,.icb,.vda,.vst,.hdr,.pic,.rgbe,.exr';
+const FORMATS_TEXT = 'JPEG, PNG, GIF, WebP, AVIF, BMP, ICO, SVG, TIFF, TGA, HDR and EXR';
+const EXT_KIND = { jpg: 'jpeg', jpeg: 'jpeg', jpe: 'jpeg', jfif: 'jpeg', pjpeg: 'jpeg', pjp: 'jpeg', png: 'png', apng: 'png', gif: 'gif',
+  webp: 'webp', avif: 'avif', bmp: 'bmp', dib: 'bmp', ico: 'ico', cur: 'ico', svg: 'svg', tif: 'tiff', tiff: 'tiff', heic: 'heic', heif: 'heic', hif: 'heic',
+  tga: 'tga', icb: 'tga', vda: 'tga', vst: 'tga', hdr: 'hdr', pic: 'hdr', rgbe: 'hdr', exr: 'exr' };
+const KIND_MIME = { jpeg: 'image/jpeg', png: 'image/png', gif: 'image/gif', webp: 'image/webp', avif: 'image/avif', bmp: 'image/bmp',
+  ico: 'image/x-icon', svg: 'image/svg+xml', tiff: 'image/tiff', heic: 'image/heic' };
+
+function sniffKind(b, name, type){
+  const has = (o, sig) => typeof sig === 'string' ? [...sig].every((c, i) => b[o + i] === c.charCodeAt(0)) : sig.every((x, i) => b[o + i] === x);
+  const ext = ((/\.([a-z0-9]+)$/i.exec(name || '') || [])[1] || '').toLowerCase();
+  if (has(0, [0xFF, 0xD8, 0xFF])) return 'jpeg';
+  if (has(0, [0x89, 0x50, 0x4E, 0x47])) return 'png';
+  if (has(0, 'GIF8')) return 'gif';
+  if (has(0, 'RIFF') && has(8, 'WEBP')) return 'webp';
+  if (has(0, [0x76, 0x2F, 0x31, 0x01])) return 'exr';
+  if (has(0, 'II*\0') || has(0, 'MM\0*') || has(0, 'II+\0') || has(0, 'MM\0+')) return 'tiff';
+  if (has(0, '#?')) return 'hdr';
+  if (has(0, [0, 0, 0, 0x0C, 0x6A, 0x50, 0x20, 0x20]) || has(0, [0xFF, 0x4F, 0xFF, 0x51])) return 'jp2';
+  if (has(0, [0xFF, 0x0A]) || has(0, [0, 0, 0, 0x0C, 0x4A, 0x58, 0x4C, 0x20])) return 'jxl';
+  if (has(0, '8BPS')) return 'psd';
+  if (has(0, '%PDF')) return 'pdf';
+  if (has(0, 'PK\x03\x04')) return 'zip';
+  if (has(4, 'ftyp')) {
+    const brand = String.fromCharCode(b[8], b[9], b[10], b[11]);
+    if (/^avi[fs]$/.test(brand)) return 'avif';
+    if (/^(hei[cxms]|hev[cxms]|mif1|msf1)$/.test(brand)) return EXT_KIND[ext] === 'avif' ? 'avif' : 'heic';
+  }
+  if (EXT_KIND[ext] === 'tga') return 'tga';           // TGA has no signature, and can start like an ICO
+  if (has(0, 'BM')) return 'bmp';
+  if (has(0, [0, 0, 1, 0]) || has(0, [0, 0, 2, 0])) return 'ico';
+  const text = new TextDecoder().decode(b).replace(/^\uFEFF/, '').trimStart();
+  if (/^</.test(text) && /<svg[\s>]/i.test(text)) return 'svg';
+  if (EXT_KIND[ext] !== 'svg' && (/^(<!doctype html|<html|<head|<body|<\?xml|<!--)/i.test(text) || /^[{[]/.test(text))) return 'text';   // a web page or data, not a picture
+  if (EXT_KIND[ext]) return EXT_KIND[ext];
+  const t = (type || '').toLowerCase();
+  for (const k in KIND_MIME) if (t === KIND_MIME[k]) return k;
+  return 'unknown';
+}
+
+// zlib data (TIFF Deflate, EXR ZIP) through the browser's own decompressor
+async function inflate(u8){
+  if (typeof DecompressionStream === 'undefined') throw new Error('This browser cannot unzip compressed image data. Update it, or save the file without compression.');
+  const out = await new Response(new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate'))).arrayBuffer();
+  return new Uint8Array(out);
+}
+const lumOf = (r, g, b) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+const cutShort = kind => new Error(`This ${kind} file is cut short or damaged.`);
+
+// TGA: true colour, grey and colour-mapped, plain or RLE, any corner as origin
+function decodeTGA(buf){
+  const b = new Uint8Array(buf), dv = new DataView(buf);
+  if (b.length < 18) throw cutShort('TGA');
+  const idLen = b[0], cmType = b[1], type = b[2], cmStart = dv.getUint16(3, true), cmLen = dv.getUint16(5, true), cmDepth = b[7];
+  const w = dv.getUint16(12, true), h = dv.getUint16(14, true), depth = b[16], desc = b[17];
+  const base = type & 7, rle = type >= 9, alphaBits = desc & 15, rightToLeft = !!(desc & 16), topDown = !!(desc & 32);
+  if (!w || !h || ![1, 2, 3].includes(base) || ![8, 15, 16, 24, 32].includes(depth)) throw new Error('This TGA variant is not supported.');
+  let p = 18 + idLen;
+  const color = (q, d, cm) => {          // [r, g, b, a] in 0..255
+    if (d === 8) return [b[q], b[q], b[q], 255];
+    if (d === 15 || d === 16) {
+      if (base === 3) return [b[q], b[q], b[q], alphaBits ? b[q + 1] : 255];
+      const v = b[q] | b[q + 1] << 8;
+      return [(v >> 10 & 31) * 255 / 31, (v >> 5 & 31) * 255 / 31, (v & 31) * 255 / 31, d === 16 && !cm && alphaBits && !(v & 0x8000) ? 0 : 255];
+    }
+    return [b[q + 2], b[q + 1], b[q], d === 32 && !cm && alphaBits ? b[q + 3] : 255];
+  };
+  const cmap = [];
+  if (cmType === 1) {
+    const cb = Math.ceil(cmDepth / 8);
+    for (let i = 0; i < cmLen; i++, p += cb) cmap.push(color(p, cmDepth, true));
+  }
+  const bpp = Math.ceil(depth / 8);
+  const pixel = q => base === 1 ? (cmap[(depth === 8 ? b[q] : b[q] | b[q + 1] << 8) - cmStart] || [0, 0, 0, 255]) : color(q, depth, false);
+  const lum = new Float32Array(w * h), n = w * h;
+  const put = (i, c) => {
+    const row = (i / w) | 0, col = i - row * w;
+    const y = topDown ? row : h - 1 - row, x = rightToLeft ? w - 1 - col : col;
+    lum[y * w + x] = lumOf(c[0], c[1], c[2]) / 255 * (c[3] / 255);
+  };
+  let i = 0;
+  while (i < n) {
+    if (p >= b.length) throw cutShort('TGA');
+    if (rle) {
+      const hd = b[p++], count = (hd & 127) + 1;
+      if (hd & 128) { const c = pixel(p); p += bpp; for (let k = 0; k < count && i < n; k++) put(i++, c); }
+      else for (let k = 0; k < count && i < n; k++, p += bpp) put(i++, pixel(p));
+    } else { put(i++, pixel(p)); p += bpp; }
+  }
+  return { w, h, lum, linear: false };
+}
+
+// Radiance HDR (RGBE or XYZE), flat or run-length scanlines, any of the eight orientations
+function decodeHDR(buf){
+  const b = new Uint8Array(buf);
+  let p = 0;
+  const line = () => { let s = ''; while (p < b.length && b[p] !== 10) s += String.fromCharCode(b[p++]); p++; return s; };
+  if (!/^#\?/.test(line())) throw new Error('This is not a Radiance HDR file.');
+  let xyze = false;
+  for (;;) {
+    if (p >= b.length) throw cutShort('HDR');
+    const l = line();
+    if (l.trim() === '') break;
+    if (/^FORMAT=32-bit_rle_xyze/.test(l)) xyze = true;
+  }
+  const r = line().trim().split(/\s+/);
+  if (r.length !== 4 || !/^[-+][XY]$/.test(r[0]) || !/^[-+][XY]$/.test(r[2])) throw new Error('This HDR file has an unreadable size line.');
+  const yMajor = r[0][1] === 'Y', n1 = +r[1], n2 = +r[3];
+  const W = yMajor ? n2 : n1, H = yMajor ? n1 : n2;
+  if (!(W > 0 && H > 0)) throw cutShort('HDR');
+  const lum = new Float32Array(W * H), scan = new Uint8Array(n2 * 4);
+  const readScan = len => {
+    if (len >= 8 && len <= 0x7fff && b[p] === 2 && b[p + 1] === 2 && !(b[p + 2] & 0x80)) {
+      if ((b[p + 2] << 8 | b[p + 3]) !== len) throw cutShort('HDR');
+      p += 4;
+      for (let c = 0; c < 4; c++) for (let x = 0; x < len;) {
+        if (p >= b.length) throw cutShort('HDR');
+        let count = b[p++];
+        if (count > 128) { count -= 128; const v = b[p++]; if (x + count > len) throw cutShort('HDR'); while (count--) scan[(x++) * 4 + c] = v; }
+        else { if (!count || x + count > len) throw cutShort('HDR'); while (count--) scan[(x++) * 4 + c] = b[p++]; }
+      }
+    } else {                                   // flat pixels, with the old 1,1,1,n repeat codes
+      let shift = 0;
+      for (let x = 0; x < len;) {
+        if (p + 4 > b.length) throw cutShort('HDR');
+        if (b[p] === 1 && b[p + 1] === 1 && b[p + 2] === 1 && x > 0) {
+          let rep = b[p + 3] << shift; p += 4; shift += 8;
+          while (rep-- && x < len) { scan.copyWithin(x * 4, (x - 1) * 4, x * 4); x++; }
+        } else { scan.set(b.subarray(p, p + 4), x * 4); p += 4; x++; shift = 0; }
+      }
+    }
+  };
+  for (let s = 0; s < n1; s++) {
+    readScan(n2);
+    for (let q = 0; q < n2; q++) {
+      const e = scan[q * 4 + 3];
+      let v = 0;
+      if (e) { const f = Math.pow(2, e - 136); v = (xyze ? scan[q * 4 + 1] : lumOf(scan[q * 4], scan[q * 4 + 1], scan[q * 4 + 2])) * f; }
+      let x, y;
+      if (yMajor) { y = r[0][0] === '-' ? s : H - 1 - s; x = r[2][0] === '+' ? q : W - 1 - q; }
+      else { x = r[0][0] === '+' ? s : W - 1 - s; y = r[2][0] === '-' ? q : H - 1 - q; }
+      lum[y * W + x] = v;
+    }
+  }
+  return { w: W, h: H, lum, linear: true };
+}
+
+// TIFF: strips or tiles, chunky or planar, none / LZW / Deflate / PackBits, predictors 2 and 3,
+// 1 to 64 bits, unsigned, signed or float; grey, RGB(A), palette or CMYK
+function lzwTIFF(src, expected){
+  let out = new Uint8Array(Math.max(expected, 1)), op = 0;
+  const prefix = new Int32Array(4096), suffix = new Uint8Array(4096), len = new Uint16Array(4096), first = new Uint8Array(4096);
+  for (let i = 0; i < 256; i++) { prefix[i] = -1; suffix[i] = i; len[i] = 1; first[i] = i; }
+  let next = 258, nbits = 9, old = -1, bit = 0;
+  const total = src.length * 8;
+  const read = () => {
+    if (bit + nbits > total) return 257;
+    const by = bit >> 3, v = ((src[by] << 16) | ((src[by + 1] | 0) << 8) | (src[by + 2] | 0)) >>> (24 - (bit & 7) - nbits) & ((1 << nbits) - 1);
+    bit += nbits; return v;
+  };
+  const emit = code => {
+    const l = len[code];
+    if (op + l > out.length) { const o2 = new Uint8Array(Math.max(out.length * 2, op + l)); o2.set(out); out = o2; }
+    for (let i = l - 1, c = code; i >= 0; i--) { out[op + i] = suffix[c]; c = prefix[c]; }
+    op += l;
+  };
+  const add = (pre, byte) => { if (next < 4096) { prefix[next] = pre; suffix[next] = byte; len[next] = len[pre] + 1; first[next] = first[pre]; next++; } };
+  for (;;) {
+    let code = read();
+    if (code === 257) break;
+    if (code === 256) {
+      next = 258; nbits = 9;
+      code = read();
+      if (code === 257) break;
+      if (code > 255) throw cutShort('TIFF');
+      emit(code); old = code; continue;
+    }
+    if (old < 0) { if (code > 255) throw cutShort('TIFF'); emit(code); old = code; continue; }
+    if (code < next) { emit(code); add(old, first[code]); }
+    else if (code === next) { add(old, first[old]); emit(code); }
+    else throw cutShort('TIFF');
+    old = code;
+    if (next >= (1 << nbits) - 1 && nbits < 12) nbits++;
+    if (op >= expected && expected > 0) break;
+  }
+  return out.subarray(0, op);
+}
+function packBits(src, expected){
+  const out = new Uint8Array(expected);
+  let i = 0, o = 0;
+  while (i < src.length && o < expected) {
+    const n = (src[i++] << 24) >> 24;
+    if (n >= 0) for (let k = 0; k <= n && o < expected; k++) out[o++] = src[i++];
+    else if (n !== -128) { const v = src[i++]; for (let k = 0; k < 1 - n && o < expected; k++) out[o++] = v; }
+  }
+  return out;
+}
+async function decodeTIFF(buf){
+  const b = new Uint8Array(buf), dv = new DataView(buf), le = b[0] === 0x49;
+  const u16 = o => dv.getUint16(o, le), u32 = o => dv.getUint32(o, le);
+  if (u16(2) === 43) throw new Error('BigTIFF files are not supported. Save it as a regular TIFF.');
+  const SIZE = [0, 1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8];
+  const WANT = new Set([254, 256, 257, 258, 259, 262, 273, 277, 278, 279, 284, 317, 320, 322, 323, 324, 325, 338, 339]);
+  const ifds = [], seen = new Set();
+  for (let off = u32(4); off && !seen.has(off) && ifds.length < 64; ) {
+    if (off + 2 > b.length) throw cutShort('TIFF');
+    seen.add(off);
+    const n = u16(off), tags = {};
+    for (let i = 0; i < n; i++) {
+      const e = off + 2 + i * 12, tag = u16(e);
+      if (!WANT.has(tag)) continue;
+      const type = u16(e + 2), cnt = u32(e + 4), sz = SIZE[type] || 1, vo = sz * cnt <= 4 ? e + 8 : u32(e + 8), vals = [];
+      if (vo + sz * cnt > b.length) throw cutShort('TIFF');
+      for (let k = 0; k < cnt; k++) {
+        const o = vo + k * sz;
+        vals.push(type === 3 ? u16(o) : type === 4 ? u32(o) : type === 8 ? dv.getInt16(o, le) : type === 9 ? dv.getInt32(o, le)
+          : type === 5 ? u32(o) / u32(o + 4) : type === 11 ? dv.getFloat32(o, le) : type === 12 ? dv.getFloat64(o, le) : type === 16 ? u32(o) : b[o]);
+      }
+      tags[tag] = vals;
+    }
+    ifds.push(tags);
+    off = u32(off + 2 + n * 12);
+  }
+  const area = t => (t[256] ? t[256][0] : 0) * (t[257] ? t[257][0] : 0);
+  const full = ifds.filter(t => !((t[254] ? t[254][0] : 0) & 1));
+  const T = (full.length ? full : ifds).reduce((a, t) => area(t) > area(a) ? t : a, {});
+  const g = (t, d) => T[t] ? T[t][0] : d;
+  const W = g(256, 0), H = g(257, 0), spp = g(277, 1), bps = g(258, 1), comp = g(259, 1), planar = g(284, 1), pred = g(317, 1), fmt = g(339, 1);
+  const photo = g(262, spp >= 3 ? 2 : 1);
+  if (!W || !H) throw cutShort('TIFF');
+  if (comp === 6 || comp === 7) throw new Error('This TIFF is JPEG-compressed, which the page cannot read. Save it with LZW, ZIP or no compression.');
+  if (![1, 5, 8, 32946, 32773].includes(comp)) throw new Error(`This TIFF uses a compression the page cannot read (type ${comp}). Save it with LZW, ZIP or no compression.`);
+  if (![0, 1, 2, 3, 5].includes(photo)) throw new Error('This TIFF uses a colour model the page cannot read (YCbCr or Lab). Save it as RGB or greyscale.');
+  if (![1, 2, 4, 8, 16, 32, 64].includes(bps) || (bps === 64 && fmt !== 3)) throw new Error(`${bps}-bit TIFF samples are not supported.`);
+  const tiled = !!T[322];
+  const bw = tiled ? g(322) : W, bh = tiled ? g(323) : Math.min(g(278, H), H);
+  const offs = T[tiled ? 324 : 273], cnts = T[tiled ? 325 : 279];
+  if (!offs || !cnts) throw cutShort('TIFF');
+  const across = Math.ceil(W / bw), down = Math.ceil(H / bh), per = across * down, sib = planar === 2 ? 1 : spp;
+  const rowBytes = Math.ceil(bw * sib * bps / 8), Bps = bps / 8;
+  const max = fmt === 3 ? 1 : Math.pow(2, bps) - 1, half = Math.pow(2, bps - 1);
+  const S = Array.from({ length: spp }, () => new Float32Array(W * H));
+  const raw = photo === 3;                       // palette indices stay as they are
+  let fpLE = null;
+  for (let plane = 0; plane < (planar === 2 ? spp : 1); plane++) for (let bi = 0; bi < per; bi++) {
+    const k = plane * per + bi;
+    if (k >= offs.length) break;
+    const bx = (bi % across) * bw, by = ((bi / across) | 0) * bh, rows = tiled ? bh : Math.min(bh, H - by), need = rowBytes * rows;
+    let d = b.subarray(offs[k], offs[k] + cnts[k]);
+    if (comp === 5) d = lzwTIFF(d, need);
+    else if (comp === 8 || comp === 32946) d = await inflate(d);
+    else if (comp === 32773) d = packBits(d, need);
+    if (d.length < need) { const full2 = new Uint8Array(need); full2.set(d); d = full2; }
+    else if (comp === 1) d = d.slice(0, need);
+    let dle = le;
+    if (pred === 2 && bps >= 8) {                 // horizontal differencing, sample by sample
+      const v = new DataView(d.buffer, d.byteOffset, d.byteLength);
+      for (let r = 0; r < rows; r++) for (let i = sib; i < bw * sib; i++) {
+        const o = r * rowBytes + i * Bps, q = o - sib * Bps;
+        if (bps === 8) d[o] = (d[o] + d[q]) & 255;
+        else if (bps === 16) v.setUint16(o, (v.getUint16(o, le) + v.getUint16(q, le)) & 0xffff, le);
+        else if (bps === 32) v.setUint32(o, (v.getUint32(o, le) + v.getUint32(q, le)) >>> 0, le);
+      }
+    } else if (pred === 3) {                      // floating point predictor: byte deltas, then byte planes back into numbers
+      const tmp = new Uint8Array(rowBytes), wc = bw * sib;
+      for (let r = 0; r < rows; r++) {
+        const row = d.subarray(r * rowBytes, (r + 1) * rowBytes);
+        for (let i = sib; i < rowBytes; i++) row[i] = (row[i] + row[i - sib]) & 255;
+        tmp.set(row);
+        for (let c = 0; c < wc; c++) for (let byte = 0; byte < Bps; byte++) row[Bps * c + byte] = tmp[(Bps - byte - 1) * wc + c];
+      }
+      if (fpLE === null) {                        // some big-endian writers store the floats byte-swapped: take whichever reading is sane
+        const v = new DataView(d.buffer, d.byteOffset, d.byteLength), n = Math.min(4096, (d.length / Bps) | 0);
+        const sane = l => { let k = 0; for (let i = 0; i < n; i++) { const x = Bps === 4 ? v.getFloat32(i * Bps, l) : v.getFloat64(i * Bps, l); if (isFinite(x) && Math.abs(x) < 1e20) k++; } return k; };
+        fpLE = sane(true) >= sane(false);
+      }
+      dle = fpLE;
+    }
+    const v = new DataView(d.buffer, d.byteOffset, d.byteLength);
+    for (let r = 0; r < rows; r++) {
+      const y = by + r;
+      if (y >= H) break;
+      for (let c = 0; c < bw; c++) {
+        const x = bx + c;
+        if (x >= W) break;
+        for (let s = 0; s < sib; s++) {
+          const si = c * sib + s;
+          let val;
+          if (bps < 8) { const bit = si * bps, o = r * rowBytes + (bit >> 3); val = (d[o] >> (8 - bps - (bit & 7))) & ((1 << bps) - 1); }
+          else {
+            const o = r * rowBytes + si * Bps;
+            if (bps === 8) val = fmt === 2 ? (d[o] << 24 >> 24) : d[o];
+            else if (bps === 16) val = fmt === 2 ? v.getInt16(o, dle) : v.getUint16(o, dle);
+            else if (bps === 32) val = fmt === 3 ? v.getFloat32(o, dle) : fmt === 2 ? v.getInt32(o, dle) : v.getUint32(o, dle);
+            else val = v.getFloat64(o, dle);
+          }
+          if (!raw && fmt !== 3) val = fmt === 2 ? (val + half) / max : val / max;
+          S[planar === 2 ? plane : s][y * W + x] = val;
+        }
+      }
+    }
+  }
+  const lum = new Float32Array(W * H), extra = T[338] ? T[338][0] : (spp === 4 && photo === 2 ? 2 : spp === 2 ? 2 : 0);
+  if (photo === 3) {
+    const cm = T[320];
+    if (!cm) throw cutShort('TIFF');
+    const n = cm.length / 3;
+    for (let i = 0; i < W * H; i++) { const k = Math.min(n - 1, S[0][i] | 0); lum[i] = lumOf(cm[k], cm[n + k], cm[2 * n + k]) / 65535; }
+  } else if (photo === 5) {
+    for (let i = 0; i < W * H; i++) { const K = 1 - S[3 % spp][i]; lum[i] = lumOf((1 - S[0][i]) * K, (1 - S[1 % spp][i]) * K, (1 - S[2 % spp][i]) * K); }
+  } else if (photo === 2 && spp >= 3) {
+    for (let i = 0; i < W * H; i++) lum[i] = lumOf(S[0][i], S[1][i], S[2][i]) * (spp > 3 && extra === 2 ? S[3][i] : 1);
+  } else {
+    for (let i = 0; i < W * H; i++) { const gv = photo === 0 ? 1 - S[0][i] : S[0][i]; lum[i] = gv * (spp > 1 && extra === 2 ? S[1][i] : 1); }
+  }
+  return { w: W, h: H, lum, linear: fmt === 3 };
+}
+
+// OpenEXR: single-part scanline files, none / RLE / ZIPS / ZIP, half, float or uint channels.
+// The picture is R, G and B (or the first layer that has all three), else Y, else the first channel.
+let HALF = null;
+function halfTable(){
+  if (HALF) return HALF;
+  HALF = new Float32Array(65536);
+  for (let h = 0; h < 65536; h++) {
+    const s = h & 0x8000 ? -1 : 1, e = (h >> 10) & 31, f = h & 1023;
+    HALF[h] = e === 0 ? s * f * 5.960464477539063e-8 : e === 31 ? (f ? NaN : s * Infinity) : s * Math.pow(2, e - 15) * (1 + f / 1024);
+  }
+  return HALF;
+}
+function exrRLE(src, expected){
+  const out = new Uint8Array(expected);
+  let i = 0, o = 0;
+  while (i < src.length && o < expected) {
+    const n = (src[i++] << 24) >> 24;
+    if (n < 0) for (let k = 0; k < -n && o < expected; k++) out[o++] = src[i++];
+    else { const v = src[i++]; for (let k = 0; k <= n && o < expected; k++) out[o++] = v; }
+  }
+  return out;
+}
+function exrUnpredict(t){
+  for (let i = 1; i < t.length; i++) t[i] = (t[i - 1] + t[i] - 128) & 255;
+  const out = new Uint8Array(t.length), mid = (t.length + 1) >> 1;
+  for (let i = 0, a = 0, c = mid; i < t.length;) { out[i++] = t[a++]; if (i < t.length) out[i++] = t[c++]; }
+  return out;
+}
+async function decodeEXR(buf){
+  const b = new Uint8Array(buf), dv = new DataView(buf), flags = dv.getUint32(4, true);
+  if (flags & 0x800) throw new Error('Deep EXR files are not supported.');
+  if (flags & 0x1000) throw new Error('Multi-part EXR files are not supported. Save a single-part EXR.');
+  if (flags & 0x200) throw new Error('Tiled EXR files are not supported. Save it with scanlines.');
+  let p = 8;
+  const str = () => { let s = ''; while (p < b.length && b[p] !== 0) s += String.fromCharCode(b[p++]); if (p >= b.length) throw cutShort('EXR'); p++; return s; };
+  let ch = null, comp = 0, dw = null;
+  for (;;) {
+    const name = str();
+    if (!name) break;
+    str();
+    const size = dv.getInt32(p, true); p += 4;
+    if (name === 'channels') {
+      ch = [];
+      for (let q = p; b[q] !== 0;) {
+        let nm = ''; while (b[q] !== 0) nm += String.fromCharCode(b[q++]); q++;
+        ch.push({ name: nm, type: dv.getInt32(q, true), xs: dv.getInt32(q + 8, true), ys: dv.getInt32(q + 12, true) }); q += 16;
+      }
+    } else if (name === 'compression') comp = b[p];
+    else if (name === 'dataWindow') dw = [0, 4, 8, 12].map(o => dv.getInt32(p + o, true));
+    p += size;
+  }
+  if (!ch || !ch.length || !dw) throw cutShort('EXR');
+  const NAMES = ['no', 'RLE', 'ZIPS', 'ZIP', 'PIZ', 'PXR24', 'B44', 'B44A', 'DWAA', 'DWAB'];
+  if (comp > 3) throw new Error(`This EXR uses ${NAMES[comp] || 'an unknown'} compression, which the page cannot read. Save it with ZIP, ZIPS, RLE or no compression.`);
+  if (ch.some(c => c.xs !== 1 || c.ys !== 1)) throw new Error('EXRs with subsampled channels are not supported.');
+  const W = dw[2] - dw[0] + 1, H = dw[3] - dw[1] + 1;
+  if (!(W > 0 && H > 0)) throw cutShort('EXR');
+  const size = c => c.type === 1 ? 2 : 4, lineBytes = ch.reduce((s, c) => s + W * size(c), 0);
+  const chOff = []; ch.reduce((s, c) => (chOff.push(s), s + W * size(c)), 0);
+  const names = ch.map(c => c.name), weight = new Float32Array(ch.length);
+  const prefixes = ['', ...new Set(names.filter(n => /\.R$/.test(n)).map(n => n.slice(0, -1)))];
+  const pre = prefixes.find(x => ['R', 'G', 'B'].every(c => names.includes(x + c)));
+  if (pre !== undefined) [['R', 0.2126], ['G', 0.7152], ['B', 0.0722]].forEach(([c, w]) => { weight[names.indexOf(pre + c)] = w; });
+  else if (names.includes('Y')) weight[names.indexOf('Y')] = 1;
+  else weight[0] = 1;
+  const lines = comp === 3 ? 16 : 1, chunks = Math.ceil(H / lines), table = halfTable(), lum = new Float32Array(W * H);
+  for (let k = 0; k < chunks; k++) {
+    const to = p + k * 8;
+    if (to + 8 > b.length) throw cutShort('EXR');
+    const off = dv.getUint32(to, true) + dv.getUint32(to + 4, true) * 4294967296;
+    if (off + 8 > b.length) throw cutShort('EXR');
+    const y0 = dv.getInt32(off, true) - dw[1], sz = dv.getInt32(off + 4, true), n = Math.min(lines, H - y0), need = n * lineBytes;
+    let d = b.subarray(off + 8, off + 8 + sz);
+    if (sz < need) d = exrUnpredict(comp === 1 ? exrRLE(d, need) : await inflate(d));   // a chunk that would not shrink is stored as it is
+    if (d.length < need) throw cutShort('EXR');
+    const v = new DataView(d.buffer, d.byteOffset, d.byteLength);
+    for (let r = 0; r < n; r++) {
+      const y = y0 + r;
+      if (y < 0 || y >= H) continue;
+      for (let ci = 0; ci < ch.length; ci++) {
+        const w = weight[ci];
+        if (!w) continue;
+        const o = r * lineBytes + chOff[ci], t = ch[ci].type, row = y * W;
+        for (let x = 0; x < W; x++) lum[row + x] += w * (t === 1 ? table[v.getUint16(o + x * 2, true)] : t === 2 ? v.getFloat32(o + x * 4, true) : v.getUint32(o + x * 4, true));
+      }
+    }
+  }
+  return { w: W, h: H, lum, linear: true };
+}
+
+// Decoded brightness to a grey canvas: shrunk to at most 1024 px, linear light exposed so the brightest 1% is white
+function lumCanvas({ w, h, lum, linear }){
+  const f = Math.max(1, Math.ceil(Math.max(w, h) / 1024)), W = Math.ceil(w / f), H = Math.ceil(h / f);
+  let L = lum;
+  if (f > 1) {
+    L = new Float32Array(W * H); const cnt = new Float32Array(W * H);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const v = lum[y * w + x]; if (!isFinite(v)) continue;
+      const i = ((y / f) | 0) * W + ((x / f) | 0); L[i] += v; cnt[i]++;
+    }
+    for (let i = 0; i < L.length; i++) L[i] = cnt[i] ? L[i] / cnt[i] : 0;
+  }
+  let scale = 1;
+  if (linear) {
+    const s = []; const step = Math.max(1, Math.floor(L.length / 20000));
+    for (let i = 0; i < L.length; i += step) if (isFinite(L[i]) && L[i] > 0) s.push(L[i]);
+    s.sort((a, c) => a - c);
+    const ref = s.length ? s[Math.min(s.length - 1, Math.floor(0.99 * s.length))] : 1;
+    scale = ref > 0 ? 1 / ref : 1;
+  }
+  const rgba = new Uint8ClampedArray(W * H * 4);
+  for (let i = 0; i < W * H; i++) {
+    let v = L[i];
+    if (!isFinite(v) || v < 0) v = 0;
+    if (linear) { v = Math.min(1, v * scale); v = v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055; }
+    const gv = Math.round(Math.min(1, v) * 255);
+    rgba[i * 4] = rgba[i * 4 + 1] = rgba[i * 4 + 2] = gv; rgba[i * 4 + 3] = 255;
+  }
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  cv.getContext('2d').putImageData(new ImageData(rgba, W, H), 0, 0);
+  return cv;
+}
+
+// Why the browser refused a JPEG: read its frame header (SOF) and name the variant
+function jpegReason(b, nm){
+  let i = 2, sof = 0, prec = 0, w = 0, h = 0, nc = 0, sos = false;
+  while (i + 3 < b.length) {
+    if (b[i] !== 0xFF) { i++; continue; }
+    const m = b[i + 1];
+    if (m === 0xFF) { i++; continue; }
+    if (m === 0xD8 || m === 0x01 || (m >= 0xD0 && m <= 0xD7)) { i += 2; continue; }
+    if (m === 0xD9) break;
+    if (m === 0xDA) { sos = true; break; }
+    const len = b[i + 2] << 8 | b[i + 3];
+    if (m >= 0xC0 && m <= 0xCF && m !== 0xC4 && m !== 0xC8 && m !== 0xCC && i + 9 < b.length) { sof = m; prec = b[i + 4]; h = b[i + 5] << 8 | b[i + 6]; w = b[i + 7] << 8 | b[i + 8]; nc = b[i + 9]; }
+    i += 2 + len;
+  }
+  const size = w && h ? `${w} × ${h}` : 'unknown size';
+  if (!sof) return `${nm} starts like a JPEG but has no image header after that, so it is cut short or not really a JPEG. Download or export it again.`;
+  if (!sos) return `${nm} ends before its image data starts (${size}), so the download or copy was cut short. Get the file again.`;
+  if (prec > 8) return `${nm} is a ${prec}-bit JPEG (${size}), which this browser does not decode. Save it as an 8-bit JPEG, or as a 16-bit TIFF or PNG to keep the detail.`;
+  if ([0xC3, 0xC7, 0xCB, 0xCF].includes(sof)) return `${nm} is a lossless JPEG (${size}), which this browser does not decode. Save it as PNG or TIFF.`;
+  if (sof >= 0xC9) return `${nm} uses arithmetic coding (${size}), which this browser does not decode. Re-save it as a standard JPEG, PNG or TIFF.`;
+  if ([0xC5, 0xC6].includes(sof)) return `${nm} is a hierarchical JPEG (${size}), which browsers do not decode. Re-save it as a standard JPEG.`;
+  if (![1, 3, 4].includes(nc)) return `${nm} has ${nc} colour channels (${size}); browsers decode JPEGs with 1, 3 or 4. Re-save it as a standard JPEG.`;
+  return `The browser could not decode ${nm} (${size}, ${nc === 1 ? 'greyscale' : nc === 4 ? 'CMYK' : 'colour'}, ${sof === 0xC2 ? 'progressive' : 'baseline'}). Its header is fine, so the image data inside is probably damaged; opening and re-saving it in an image editor usually fixes that.`;
+}
+
+// Let the browser decode it: resolves to the loaded <img>, or null when it cannot
+function browserDecode(blob){
+  return new Promise(res => {
+    const url = URL.createObjectURL(blob), img = new Image();
+    img.onload = () => res({ img, done: () => URL.revokeObjectURL(url) });
+    img.onerror = () => { URL.revokeObjectURL(url); res(null); };
+    img.src = url;
+  });
+}
+async function decodeImageFile(file){
+  const buf = await file.arrayBuffer();
+  if (!buf.byteLength) throw new Error(`"${file.name}" is empty.`);
+  const kind = sniffKind(new Uint8Array(buf, 0, Math.min(buf.byteLength, 512)), file.name, file.type);
+  if (kind === 'tga') return { img: lumCanvas(decodeTGA(buf)) };
+  if (kind === 'hdr') return { img: lumCanvas(decodeHDR(buf)) };
+  if (kind === 'exr') return { img: lumCanvas(await decodeEXR(buf)) };
+  if (kind === 'tiff') {
+    try { return { img: lumCanvas(await decodeTIFF(buf)) }; }
+    catch (e) { const r = await browserDecode(new Blob([buf], { type: 'image/tiff' })); if (r) return r; throw e; }   // Safari reads a few TIFFs the page cannot
+  }
+  const nm = `"${file.name}"`;
+  if (kind === 'text') throw new Error(`${nm} is not a picture: inside it is a web page or text saved under an image name. That happens when a site sends a page (a login, error or viewer page) instead of the image. Open the image on its own in a browser tab, save that, and load the new file.`);
+  if (kind === 'pdf') throw new Error(`${nm} is a PDF, not an image. Export the page as PNG or JPEG.`);
+  if (kind === 'psd') throw new Error(`${nm} is a Photoshop file. Save a flattened JPEG, PNG or TIFF.`);
+  if (kind === 'zip') throw new Error(`${nm} is a zip archive. Unzip it and load the image inside.`);
+  const r = await browserDecode(new Blob([buf], { type: KIND_MIME[kind] || file.type || '' }));
+  if (r) { r.vector = kind === 'svg'; return r; }
+  if (kind === 'heic') throw new Error('This browser cannot open HEIC photos; Safari can. Export it as JPEG or PNG and load that.');
+  if (kind === 'avif') throw new Error('This browser cannot open AVIF images. Use a current Chrome, Firefox or Safari, or convert it to PNG.');
+  if (kind === 'jp2') throw new Error(`${nm} is a JPEG 2000 image, which browsers do not decode. Convert it to JPEG, PNG or TIFF.`);
+  if (kind === 'jxl') throw new Error(`${nm} is a JPEG XL image, which this browser cannot decode (Safari can). Convert it to JPEG or PNG.`);
+  if (kind === 'jpeg') throw new Error(jpegReason(new Uint8Array(buf), nm));
+  if (kind === 'unknown') throw new Error(`${nm} is not an image the page can read. It reads ${FORMATS_TEXT}, and HEIC in Safari.`);
+  throw new Error(`The browser could not decode ${nm}. The image data inside is probably damaged; opening and re-saving it in an image editor usually fixes that.`);
+}
+
+function processImage(img, name, vector){
+  const iw = img.naturalWidth || img.width || 512, ih = img.naturalHeight || img.height || 512;
+  const sc = vector ? 512 / Math.max(iw, ih) : Math.min(1, 512 / Math.max(iw, ih));   // vector art is drawn at the full 512
+  const w = Math.max(2, Math.round(iw * sc)), h = Math.max(2, Math.round(ih * sc)), n = w * h;
+  const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+  const cx = cv.getContext('2d', { willReadFrequently: true }); cx.drawImage(img, 0, 0, w, h);
+  const px = cx.getImageData(0, 0, w, h).data;
+  const raw = new Float32Array(n);
+  for (let i = 0; i < n; i++) raw[i] = (0.2126 * px[i * 4] + 0.7152 * px[i * 4 + 1] + 0.0722 * px[i * 4 + 2]) / 255;
+  const L = gauss(raw, w, h, 1.2);                              // brightness, lightly blurred
+  const [gx, gy] = gradient(L, w, h);
+  const mag = new Float32Array(n); for (let i = 0; i < n; i++) mag[i] = Math.hypot(gx[i], gy[i]);
+  const mMax = percentile(mag, 0.99);
+  const edge = new Float32Array(n); for (let i = 0; i < n; i++) edge[i] = Math.min(1, mag[i] / mMax);
+  // contour direction from the structure tensor: steadier than the raw gradient, and it says how clear the direction is
+  const xx = new Float32Array(n), xy = new Float32Array(n), yy = new Float32Array(n);
+  for (let i = 0; i < n; i++) { xx[i] = gx[i] * gx[i]; xy[i] = gx[i] * gy[i]; yy[i] = gy[i] * gy[i]; }
+  const Jxx = gauss(xx, w, h, 3), Jxy = gauss(xy, w, h, 3), Jyy = gauss(yy, w, h, 3);
+  const tr = new Float32Array(n); for (let i = 0; i < n; i++) tr[i] = Jxx[i] + Jyy[i];
+  const trMid = percentile(tr, 0.5);
+  // fields the points climb when pulled: blurred edge strength, blurred darkness
+  const Eb = gauss(edge, w, h, 4), dark = new Float32Array(n);
+  for (let i = 0; i < n; i++) dark[i] = 1 - L[i];
+  const Db = gauss(dark, w, h, 6);
+  const [ex, ey] = gradient(Eb, w, h), [dx, dy] = gradient(Db, w, h);
+  const em = new Float32Array(n), dm = new Float32Array(n);
+  for (let i = 0; i < n; i++) { em[i] = Math.hypot(ex[i], ey[i]); dm[i] = Math.hypot(dx[i], dy[i]); }
+  const eMax = percentile(em, 0.99), dMax = percentile(dm, 0.99);
+  const A = new Float32Array(n * 4), B = new Float32Array(n * 4);
+  for (let i = 0; i < n; i++) {
+    const d = Jxx[i] - Jyy[i], o = Math.sqrt(d * d + 4 * Jxy[i] * Jxy[i]);
+    const coh = tr[i] > 0 ? (o / tr[i]) * (tr[i] / (tr[i] + trMid)) : 0;
+    const th = 0.5 * Math.atan2(2 * Jxy[i], d);                // direction across the contour
+    A[i * 4] = L[i]; A[i * 4 + 1] = edge[i]; A[i * 4 + 2] = -Math.sin(th) * coh; A[i * 4 + 3] = Math.cos(th) * coh;
+    const es = Math.min(1, em[i] / eMax) / Math.max(em[i], 1e-9), ds = Math.min(1, dm[i] / dMax) / Math.max(dm[i], 1e-9);
+    B[i * 4] = ex[i] * es; B[i * 4 + 1] = ey[i] * es; B[i * 4 + 2] = dx[i] * ds; B[i * 4 + 3] = dy[i] * ds;
+  }
+  gl.deleteTexture(G.texA); gl.deleteTexture(G.texB);
+  G.texA = texture(w, h, 'rgba16f32', A, gl.LINEAR);
+  G.texB = texture(w, h, 'rgba16f32', B, gl.LINEAR);
+  Object.assign(G, { on: true, name, w, h, lum: L, edge });
+  if (!P.playing) S.infoDirty = true;
+  showGuide();
+}
+function loadGuide(src, name, revoke){
+  const img = new Image();
+  img.onload = () => { try { processImage(img, name); guideError(''); } catch (e) { guideError('Could not process that image: ' + e.message); } if (revoke) URL.revokeObjectURL(src); };
+  img.onerror = () => { guideError('That file could not be read as an image. Try a JPEG or PNG.'); if (revoke) URL.revokeObjectURL(src); };
+  img.src = src;
+}
+let loadSeq = 0;
+async function loadGuideFile(file){
+  if (!file) return;
+  const seq = ++loadSeq, nm = document.getElementById('guideName');
+  guideError(''); if (nm) nm.textContent = `Reading ${file.name || 'image'}…`;
+  try {
+    const r = await decodeImageFile(file);
+    if (seq !== loadSeq) { if (r.done) r.done(); return; }      // a newer file arrived meanwhile
+    processImage(r.img, file.name || 'pasted image', r.vector);
+    if (r.done) r.done();
+  } catch (e) {
+    if (seq !== loadSeq) return;
+    guideError(e.message || 'That file could not be read.'); showGuide();
+  }
+}
+function clearGuide(){
+  G.on = false; G.name = '';
+  gl.deleteTexture(G.texA); gl.deleteTexture(G.texB);
+  G.texA = texture(1, 1, 'rgba16f32', new Float32Array(4), gl.LINEAR);
+  G.texB = texture(1, 1, 'rgba16f32', new Float32Array(4), gl.LINEAR);
+  if (!P.playing) S.infoDirty = true;
+  showGuide();
+}
+// Half the image size in world units (x, z). Fit decides how it meets the square grid, then Scale multiplies it:
+//   contain = whole image inside the grid, cover = image fills the grid (edges cropped), stretch = exactly the grid
+function imgHalf(){
+  const a = G.w / G.h, g = S.size;
+  let ww, hh;
+  if (P.imgFit === 'stretch') { ww = g; hh = g; }
+  else if ((P.imgFit === 'cover') === (a >= 1)) { hh = g; ww = g * a; }
+  else { ww = g; hh = g / a; }
+  const sc = Math.abs(P.imgScale) < 1e-6 ? (P.imgScale < 0 ? -1e-6 : 1e-6) : P.imgScale;   // negative mirrors the image
+  return [ww * sc / 2, hh * sc / 2];
+}
+const imgCenter = () => [P.imgX, P.imgZ];
+const smooth = (a, b, v) => { if (b === a) return v >= a ? 1 : 0; const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
+function drawPreview(){
+  const cv = document.getElementById('guidePreview'); if (!cv || !G.on) return;
+  if (cv.width !== G.w || cv.height !== G.h) { cv.width = G.w; cv.height = G.h; }
+  const cx = cv.getContext('2d'), im = cx.createImageData(G.w, G.h), d = im.data;
+  for (let i = 0; i < G.w * G.h; i++) {
+    const v = P.follow === 'edges' ? G.edge[i] : P.follow === 'dark' ? 1 - G.lum[i] : G.lum[i];
+    const m = smooth(P.thr, P.thr + P.soft, v) * 0.9, g = G.lum[i] * 90;
+    d[i * 4] = g + (226 - g) * m; d[i * 4 + 1] = g + (165 - g) * m; d[i * 4 + 2] = g + (66 - g) * m; d[i * 4 + 3] = 255;
+  }
+  cx.putImageData(im, 0, 0);
+  // the part of the image that lands on the grid: outside it is dimmed (when the image is bigger than the grid)
+  const [hx, hz] = imgHalf(), [ox, oz] = imgCenter(), g = S.size / 2;
+  const u0 = ((-g - ox) / (2 * hx) + 0.5) * G.w, u1 = ((g - ox) / (2 * hx) + 0.5) * G.w;
+  const v0 = ((-g - oz) / (2 * hz) + 0.5) * G.h, v1 = ((g - oz) / (2 * hz) + 0.5) * G.h;
+  cx.save();
+  cx.beginPath(); cx.rect(0, 0, G.w, G.h); cx.rect(u0, v0, u1 - u0, v1 - v0);
+  cx.fillStyle = 'rgba(8,9,12,0.62)'; cx.fill('evenodd');
+  cx.strokeStyle = 'rgba(232,229,221,0.85)'; cx.lineWidth = Math.max(1.5, G.w / 260); cx.strokeRect(u0, v0, u1 - u0, v1 - v0);
+  cx.restore();
+}
+function guideError(msg){ const el = document.getElementById('guideErr'); if (el) { el.textContent = msg; el.hidden = !msg; } }
+function showGuide(){
+  const cv = document.getElementById('guidePreview'), empty = document.getElementById('guideEmpty'), nm = document.getElementById('guideName'), rm = document.getElementById('guideRemove');
+  if (!cv) return;
+  cv.hidden = !G.on; empty.hidden = G.on; rm.disabled = !G.on;
+  nm.textContent = G.on ? `${G.name} · ${G.w}×${G.h}` : '';
+  drawPreview();
 }
 
 /* ------------------------------------------------------------------ camera + drawing */
@@ -699,14 +1701,21 @@ function render(){
   gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
   const lines = P.draw === 'lines', size = P.pointSize * dpr;
   run(PR.points, S.frameFbo, S.fw, S.fh, {
-    uState: S.state[S.cur], uInfo: S.info, uRamp: S.ramp,
-    uTexW: S.texW, uTexShift: S.shift, uColorBy: { dir: 0, rule: 1, angle: 2 }[P.colorBy], uLines: lines ? 1 : 0,
+    uState: S.state[S.cur], uInfo: S.info, uAttr: S.attr, uRamp: S.ramp,
+    uTexW: S.texW, uTexShift: S.shift, uColorBy: { pdn: 0, dir: 1, rule: 2, angle: 3 }[P.colorBy], uLines: lines ? 1 : 0,
     uCam: [cam.x, cam.y], uScale: sc, uPointSize: size, uNLen: P.nLen,
     uFwd: hex01(RULE_COL.fwd), uBack: hex01(RULE_COL.back), uBoth: hex01(RULE_COL.both), uIdle: hex01(RULE_COL.idle),
     uOpacity: P.opacity, uRound: !lines && size >= 2.5 ? 1 : 0,
   }, lines ? gl.LINES : gl.POINTS, lines ? S.count * 2 : S.count);
   gl.disable(gl.BLEND);
-  run(PR.blit, null, S.fw, S.fh, { uSrc: S.frameTex });
+  if (S.flashPending) { S.flashPending = false; S.flashUntil = performance.now() + 1500; }   // 1.5 s from the first frame that shows it
+  run(PR.blit, null, S.fw, S.fh, {
+    uSrc: S.frameTex, uGuideA: G.texA, uOverlay: !G.on ? 0 : P.overlay !== 'off' ? { image: 1, mask: 2 }[P.overlay] : (performance.now() < S.flashUntil ? 2 : 0),
+    uAlpha: P.overlay !== 'off' ? P.overlayAlpha : 0.4,
+    uCam: [cam.x, cam.y], uPpu: cam.ppu, uFrame: [S.fw, S.fh], uImgHalf: imgHalf(), uImgCenter: imgCenter(),
+    uGuideSrc: { edges: 0, dark: 1, light: 2 }[P.follow], uThr: P.thr, uSoft: P.soft, uTint: hex01(RULE_COL.fwd),
+    uInvert: { off: 0, on: 1, hue: 2 }[P.invert] || 0,
+  });
   if (P.marker === 'on' && inspectId >= 0 && inspectId < S.count) {
     gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     const base = { uState: S.state[S.cur], uTexW: S.texW, uTexShift: S.shift, uCam: [cam.x, cam.y], uScale: sc };
@@ -718,31 +1727,67 @@ function render(){
 }
 
 /* ------------------------------------------------------------------ readouts */
-let inspectId = 0, inspectNpt = -1;
+let inspectId = 0, inspectNpt = -1, inspectFolder = null;
+// Reading a point back stalls the GPU, so only do it when the Inspect folder is on screen or the marker needs npt
+const inspectShown = () => P.marker === 'on' || (!!inspectFolder && inspectFolder.open && !$('#pane').hidden);
 const fmtN = (v, d = 4) => (Math.abs(v) < 5e-5 ? 0 : v).toFixed(d);
 const BRANCH = ['neither', 'angle > upper', 'angle < lower', 'both'];
 function readInspect(){
   if (inspectId < 0 || inspectId >= S.count) return;
   const x = inspectId & (S.texW - 1), y = inspectId >> S.shift;
-  const st = readTex(S.state[S.cur], x, y, 1, 1), inf = readTex(S.info, x, y, 1, 1);
+  const st = readTex(S.state[S.cur], x, y, 1, 1), inf = readTex(S.info, x, y, 1, 1), at = readTex(S.attr, x, y, 1, 1);
   const set = (id, t) => { const el = document.getElementById(id); if (el) el.textContent = t; };
   inspectNpt = inf[2] >= 0 ? Math.round(inf[2]) : -1;
   set('iv-pt', String(inspectId));
   set('iv-P', `${fmtN(st[0])}, 0, ${fmtN(st[1])}`);
   set('iv-N', `${fmtN(st[2])}, 0, ${fmtN(st[3])}`);
-  set('iv-npt', inspectNpt >= 0 ? String(inspectNpt) + (inf[3] < 0 ? '  (point 0)' : '') : 'none');
+  set('iv-npt', inspectNpt < 0 ? 'none' : String(inspectNpt) + (inf[3] < 0 ? (inspectNpt === inspectId ? '  (itself)' : '  (point 0)') : ''));
+  const fitK = pd => { const a = P.kA, b = P.kB, t = b > a ? Math.min(1, Math.max(0, (pd - a) / (b - a))) : (pd >= b ? 1 : 0); return Math.trunc(2 + P.kExtra * t + 1e-4); };
+  set('iv-k', P.kMode !== 'fit' ? '2  [1]' : (k => k <= 1 ? `${k}  (itself)` : k > 34 ? `${k} → 34 (cap)  [-1]` : `${k}  [-1]`)(fitK(Math.round(at[0]))));
   set('iv-dist', inf[3] >= 0 ? fmtN(inf[3]) : 'outside radius');
   set('iv-angle', inf[0] >= 0 ? inf[0].toFixed(2) + '°' : '–');
   set('iv-branch', BRANCH[Math.round(inf[1])] || '–');
+  set('iv-pd', String(Math.round(at[0])));
+  set('iv-pdn', at[1].toFixed(3));
+  set('iv-mask', G.on && P.guide === 'on' ? at[3].toFixed(3) : 'no guide');
+  const sp = readTex(S.speed[S.cur], x, y, 1, 1)[0];
+  set('iv-speed', sp.toFixed(4) + (P.darkSlow === 'on' && G.on && P.guide === 'on' ? '' : '  (not applied)'));
 }
-function readStats(){ const c = readTex(S.counts, 0, 0, 1, 1); S.stats = [c[0], c[1], c[2], c[3]]; }
+function readStats(){ reduceStats(); const c = readTex(S.counts, 0, 0, 1, 1); S.stats = [c[0], c[1], c[2], c[3]]; }
+// The same counts without making the CPU wait for the GPU: the texel is copied into a buffer, and picked up a frame
+// or so later once a fence says the GPU has got there. A plain readPixels would stall every frame that asks.
+const statsBuf = gl.createBuffer(), statsOut = new Float32Array(4);
+gl.bindBuffer(gl.PIXEL_PACK_BUFFER, statsBuf); gl.bufferData(gl.PIXEL_PACK_BUFFER, 16, gl.STREAM_READ); gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
+let statsFence = null, statsWanted = false, statsEpoch = 0, fenceEpoch = 0;   // epoch: a copy asked for before a sync read is stale
+function requestStats(){
+  if (statsFence) return false;                  // one copy in flight at a time
+  reduceStats();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, readFbo);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, S.counts, 0);
+  gl.bindBuffer(gl.PIXEL_PACK_BUFFER, statsBuf);
+  gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.FLOAT, 0);
+  gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
+  statsFence = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0); fenceEpoch = statsEpoch; gl.flush();
+  return true;
+}
+function pollStats(){
+  if (!statsFence) return false;
+  const st = gl.clientWaitSync(statsFence, 0, 0);
+  if (st === gl.TIMEOUT_EXPIRED) return false;
+  gl.deleteSync(statsFence); statsFence = null;
+  if (st === gl.WAIT_FAILED) { statsWanted = true; return false; }
+  gl.bindBuffer(gl.PIXEL_PACK_BUFFER, statsBuf); gl.getBufferSubData(gl.PIXEL_PACK_BUFFER, 0, statsOut); gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
+  if (fenceEpoch !== statsEpoch) return false;
+  S.stats = [statsOut[0], statsOut[1], statsOut[2], statsOut[3]];
+  return true;
+}
 
 let fpsT = performance.now(), fpsN = 0, fps = 0;
 const nf = new Intl.NumberFormat('en-US');
 function updateHud(){
   const n = Math.max(1, S.count), pc = v => (v / n * 100).toFixed(1) + '%';
   $('#stats').innerHTML = `<b>${nf.format(S.count)}</b> pts (${S.cols}×${S.rows}) · <b>${fps.toFixed(0)}</b> fps · step <b>${nf.format(S.frame)}</b><br>` +
-    `<span class="fw">&lt; ${P.low}: ${pc(S.stats[0])}</span> · <span class="bk">&gt; ${P.angle}: ${pc(S.stats[1])}</span> · neither ${pc(S.stats[2])} · lone ${nf.format(S.stats[3])}`;
+    `<span class="fw">&lt; ${P.low}: ${pc(S.stats[0])}</span> · <span class="bk">&gt; ${P.angle}: ${pc(S.stats[1])}</span> · pdn &gt; ${P.shrinkMin}: ${pc(S.stats[2])} · lone ${nf.format(S.stats[3])}`;
 }
 
 /* ------------------------------------------------------------------ main loop */
@@ -760,37 +1805,79 @@ function frame(now){
   render();
   fpsN++;
   if (now - fpsT > 500) { fps = fpsN * 1000 / (now - fpsT); fpsN = 0; fpsT = now; }
-  if (++tick % 12 === 0 || changed) { readStats(); readInspect(); updateHud(); }
+  const due = ++tick % 12 === 0;
+  if (changed) {                // a reset, or a step while paused: read now (nothing is queued behind it to stall)
+    statsEpoch++; readStats(); if (inspectShown()) readInspect(); updateHud();
+  } else {                      // otherwise: ask every 12 frames, show the counts when they arrive
+    const got = pollStats();
+    if (due) { statsWanted = true; if (inspectShown()) readInspect(); }
+    if (statsWanted && requestStats()) statsWanted = false;
+    if (due || got) updateHud();
+  }
 }
 
 /* ------------------------------------------------------------------ UI */
 const GROUPS = [
-  { title: 'Solver', formula: true, items: [
+  { title: 'Presets', tag: 'save & load', presets: true, items: [] },
+  { title: 'Solver', formula: 'rule', items: [
     { k: 'angle', label: 'angle >', code: true, main: true, hint: 'The 70 in if(angle>70): above it, N turns toward the neighbour and the point steps back', min: 0, max: 180, step: 0.1, solver: true },
-    { k: 'count', label: 'Particles', main: true, hint: 'Points on the grid, rounded to a square grid. Restarts the sim.', log: true, min: 1000, max: 1048576, step: 1, round: v => Math.min(1048576, +v.toPrecision(3)), hardMin: 16, hardMax: 1048576, reset: true },
-    { k: 'speed', label: 'Sim speed', main: true, hint: 'Solver steps per displayed frame', log: true, min: 0.1, max: 30, step: 0.01, round: v => +v.toPrecision(2), hardMin: 0.01, hardMax: 60 },
+    { k: 'count', label: 'Particles', main: true, hint: 'Points on the grid, rounded to a square grid. Restarts the sim.', log: true, min: 1000, max: 1048576, step: 1, hardMin: 16, hardMax: 1048576, int: true, round: v => Math.min(1048576, +v.toPrecision(3)), reset: true },
+    { k: 'speed', label: 'Sim speed', main: true, hint: 'Solver steps per displayed frame', log: true, min: 0.1, max: 30, step: 0.01, hardMin: 0.001, hardMax: 60, round: v => +v.toPrecision(2)},
+    { k: 'kMode', label: 'npt', code: true, type: 'seg', solver: true, hint: 'Closest: nearpoints(0, @P, .6, 2)[1]. Fit by pd: nearpoints(0, @P, .6, int(fit(@pd, a, b, 2, 2 + extra)))[-1]', options: [['near', 'Closest [1]'], ['fit', 'Fit by pd [-1]']] },
+    { k: 'kA', label: 'a', code: true, hint: 'pd at or below a: k = 2, so the closest point', min: 1, max: 120, step: 1, solver: true, showIf: () => P.kMode === 'fit' },
+    { k: 'kB', label: 'b', code: true, hint: 'pd at or above b: k = 2 + extra. pd never goes above pd_max_num', min: 1, max: 120, step: 1, solver: true, showIf: () => P.kMode === 'fit' },
+    { k: 'kExtra', label: 'extra', code: true, hint: 'How many places farther down the list the densest points read. k tops out at 34; at k 1 or below a point reads itself', min: 0, max: 32, step: 1, solver: true, showIf: () => P.kMode === 'fit' },
+  ]},
+  { title: 'Image guide', tag: 'steer to a picture', formula: 'guide', guide: true, items: [
+    { k: 'guide', label: 'Guide', type: 'seg', solver: true, options: [['on', 'On'], ['off', 'Off']] },
+    { k: 'follow', label: 'Follow', type: 'seg', solver: true, preview: true, hint: 'What counts as a strong area of the image', options: [['edges', 'Edges'], ['dark', 'Dark'], ['light', 'Light']] },
+    { k: 'thr', label: 'Threshold', hint: 'Where the mask starts (edge strength or tone, 0 to 1)', min: 0, max: 1, step: 0.01, solver: true, preview: true },
+    { k: 'soft', label: 'Softness', hint: 'How wide the fade from no mask to full mask is', min: 0.01, max: 0.5, step: 0.01, solver: true, preview: true },
+    { k: 'steer', label: 'Steer N', hint: 'How far N turns toward the contour each step, times the mask', min: 0, max: 1, step: 0.01, hardMin: -1e6, hardMax: 1e6, solver: true },
+    { k: 'pull', label: 'Pull P', hint: 'How far P moves toward the nearest strong area each step, in world units', min: 0, max: 0.02, step: 0.0001, hardMin: -10, hardMax: 10, solver: true },
+    { k: 'darkSlow', label: 'Slow in dark', type: 'seg', solver: true, hint: 'Each step a point spends where the mask is below min_lum, its speed is multiplied by mult_in_dark. Speed carries over between steps; Reset or a click restores it.', options: [['on', 'On'], ['off', 'Off']] },
+    { k: 'multDark', label: 'mult_in_dark', code: true, hint: 'Speed multiplier per step in the dark. 0.999 leaves about 37% speed after 1,000 steps, 14% after 2,000. Above 1 speeds points up, below 0 flips them back and forth; @speed is held within ±1000', min: 0.99, max: 1, step: 0.0001, hardMin: -1e6, hardMax: 1e6, solver: true, showIf: () => P.darkSlow === 'on' },
+    { k: 'minLum', label: 'min_lum', code: true, hint: 'Mask values below this count as black (0 to 1)', min: 0, max: 0.5, step: 0.001, solver: true, showIf: () => P.darkSlow === 'on' },
+    { k: 'imgFit', label: 'Fit', type: 'seg', solver: true, preview: true, place: true, hint: 'How the image meets the square grid at Mask scale 1', options: [['contain', 'Inside'], ['cover', 'Fill grid'], ['stretch', 'Stretch']] },
+    { k: 'imgScale', label: 'Mask scale', hint: 'Makes the image bigger or smaller around its centre: 1 = the Fit size, 0.5 = half, 2 = twice', min: 0.05, max: 4, step: 0.01, hardMin: -1e4, hardMax: 1e4, solver: true, preview: true, place: true },
+    { k: 'imgX', label: 'Offset X', hint: 'Moves the image along X, in world units', min: -5, max: 5, step: 0.01, hardMin: -1e6, hardMax: 1e6, solver: true, preview: true, place: true },
+    { k: 'imgZ', label: 'Offset Z', hint: 'Moves the image along Z (down on screen), in world units', min: -5, max: 5, step: 0.01, hardMin: -1e6, hardMax: 1e6, solver: true, preview: true, place: true },
+    { k: 'overlay', label: 'Show', type: 'seg', hint: 'Faint image or mask under the points, for lining things up', options: [['off', 'Off'], ['image', 'Image'], ['mask', 'Mask']] },
+    { k: 'overlayAlpha', label: 'Show opacity', min: 0.02, max: 1, step: 0.01, hardMin: -10, hardMax: 10, showIf: () => P.overlay !== 'off' },
+  ]},
+  { title: 'Density & shrink', tag: '@pd  @pdn', formula: 'pd', items: [
+    { k: 'pdRadius', label: 'pd_radius', code: true, hint: 'pd = len(nearpoints(0, @P, pd_radius, pd_max_num))', min: 0.005, max: 0.6, step: 0.001, solver: true, grid: true },
+    { k: 'pdMax', label: 'pd_max_num', code: true, hint: 'Most points pd counts; pdn is 1 at this count', min: 2, max: 200, step: 1, hardMin: 1, hardMax: 1e6, int: true, solver: true },
+    { k: 'shrink', label: 'shrink', code: true, hint: 'The 0.99 in @N += @N * lerp(1, 0.99, fit(@pdn, shrink_pd_min, shrink_pd_max, 0, 1))', min: 0.9, max: 1, step: 0.0001, hardMin: -1e6, hardMax: 1e6, solver: true },
+    { k: 'shrinkMin', label: 'shrink_pd_min', code: true, hint: 'Below this pdn there is no shrink', min: 0, max: 1, step: 0.01, solver: true },
+    { k: 'shrinkMax', label: 'shrink_pd_max', code: true, hint: 'At this pdn and above the full shrink applies', min: 0, max: 1, step: 0.01, solver: true },
   ]},
   { title: 'Wrangle constants', tag: 'from the VEX', closed: true, items: [
     { k: 'low', label: 'angle <', code: true, hint: 'The 45.2 in if(angle<45.2)', min: 0, max: 180, step: 0.1, solver: true },
-    { k: 'radius', label: 'radius', code: true, hint: 'nearpoints(0, @P, radius, 2)', min: 0.01, max: 3, step: 0.01, hardMax: 100, solver: true, grid: true },
-    { k: 'lerpHigh', label: 'Lerp above', hint: 'lerp(@N, nN, 0.032) in the angle > branch', min: 0, max: 0.5, step: 0.0001, hardMax: 1, solver: true },
-    { k: 'lerpLow', label: 'Lerp below', hint: 'lerp(@N, nN, 0.0325) in the angle < branch', min: 0, max: 0.5, step: 0.0001, hardMax: 1, solver: true },
-    { k: 'move', label: 'Step', hint: '@P -= / += @N*0.008', min: 0, max: 0.05, step: 0.0001, hardMax: 1, solver: true },
-    { k: 'lone', label: 'Lone point', type: 'seg', solver: true, hint: 'Nothing within radius: nearpoints()[1] reads past the array end, VEX returns 0, so the point uses point 0’s N', options: [['vex', 'Use point 0 (VEX)'], ['keep', 'Leave as is']] },
+    { k: 'radius', label: 'radius', code: true, hint: 'nearpoints(0, @P, radius, 2)', min: 0.01, max: 3, step: 0.01, solver: true, grid: true },
+    { k: 'lerpHigh', label: 'Lerp above', hint: 'lerp(@N, nN, 0.032) in the angle > branch', min: 0, max: 0.5, step: 0.0001, hardMin: -1e6, hardMax: 1e6, solver: true },
+    { k: 'lerpLow', label: 'Lerp below', hint: 'lerp(@N, nN, 0.0325) in the angle < branch', min: 0, max: 0.5, step: 0.0001, hardMin: -1e6, hardMax: 1e6, solver: true },
+    { k: 'move', label: 'Step', hint: '@P -= / += @N*0.008', min: 0, max: 0.05, step: 0.0001, hardMin: -10, hardMax: 10, solver: true },
+    { k: 'lone', label: 'Lone point', type: 'seg', solver: true, hint: 'Nothing else within radius. VEX: with [1] the read is past the array end and returns 0, so point 0’s N; with [-1] it is the point itself', options: [['vex', 'As VEX does'], ['keep', 'Leave as is']] },
   ]},
   { title: 'Grid', tag: 'restarts sim', closed: true, items: [
-    { k: 'size', label: 'Grid size', hint: 'Grid SOP size in X and Z (Houdini default 10)', min: 1, max: 50, step: 0.1, hardMin: 0.01, hardMax: 1000, reset: true },
-    { k: 'seed', label: 'Seed', hint: 'Seed for the random N', min: 0, max: 999, step: 1, hardMax: 1e6, reset: true },
+    { k: 'size', label: 'Grid size', hint: 'Grid SOP size in X and Z (Houdini default 10)', min: 1, max: 50, step: 0.1, hardMin: 0.01, hardMax: 1e5, reset: true },
+    { k: 'seed', label: 'Seed', hint: 'Seed for the random N', min: 0, max: 999, step: 1, hardMin: -2147483647, hardMax: 2147483647, int: true, reset: true },
   ]},
   { title: 'Display', items: [
+    { k: 'invert', label: 'Invert', type: 'seg', hint: 'Off-white background, dark points (I). Full flips every colour, so the ramp hues turn to their opposites. Keep hue flips only lightness, so the ramp keeps its hues.', options: [['off', 'Off'], ['on', 'Full'], ['hue', 'Keep hue']] },
     { k: 'draw', label: 'Draw', type: 'seg', options: [['points', 'Points'], ['lines', 'N as lines']] },
-    { k: 'colorBy', label: 'Color by', type: 'seg', options: [['dir', '@N'], ['rule', 'Branch'], ['angle', 'angle']] },
-    { type: 'ramp', showIf: () => P.colorBy !== 'rule' },
+    { k: 'colorBy', label: 'Color by', type: 'seg', options: [['pdn', 'pdn'], ['dir', '@N'], ['rule', 'Branch'], ['angle', 'angle']] },
+    { type: 'rampedit', showIf: () => P.colorBy !== 'rule' },
     { type: 'legend', showIf: () => P.colorBy === 'rule' },
-    { k: 'pointSize', label: 'Point size', min: 0.5, max: 8, step: 0.1 },
-    { k: 'nLen', label: 'N length', hint: 'Line length in world units', min: 0.001, max: 0.3, step: 0.001, showIf: () => P.draw === 'lines' },
-    { k: 'opacity', label: 'Opacity', min: 0.02, max: 1, step: 0.01 },
-    { k: 'trails', label: 'Trails', min: 0, max: 0.99, step: 0.01 },
+    { k: 'pointSize', label: 'Point size', min: 0.5, max: 8, step: 0.1, hardMin: 0, hardMax: 256 },
+    { k: 'nLen', label: 'N length', hint: 'Line length in world units', min: 0.001, max: 0.3, step: 0.001, hardMin: -1e4, hardMax: 1e4, showIf: () => P.draw === 'lines' },
+    { k: 'opacity', label: 'Opacity', min: 0.02, max: 1, step: 0.01, hardMin: -100, hardMax: 100 },
+    { k: 'trails', label: 'Trails', min: 0, max: 0.99, step: 0.01, hardMin: -1, hardMax: 1 },
+  ]},
+  { title: 'Click', tag: 'randomize N', closed: true, items: [
+    { k: 'brush', label: 'Radius', hint: 'Clicking in the view gives every point inside this circle a new random N', min: 5, max: 300, step: 1, hardMin: 0, hardMax: 1e5, int: true},
+    { type: 'note', text: 'Click in the view to randomize N inside the circle (screen pixels); those points also get full @speed back. Shift-click inspects a point instead. Drag still pans.' },
   ]},
   { title: 'Inspect', tag: '@ptnum', inspect: true, closed: true, items: [
     { k: 'marker', label: 'Highlight', hint: 'Ring the inspected point and its npt', type: 'seg', options: [['off', 'Off'], ['on', 'On']] },
@@ -811,15 +1898,76 @@ function onChange(it, committed){
   if (it.grid) updateSearchGrid();
   if (it.solver) { if (!P.playing) S.infoDirty = true; updateFormula(); }
   if (it.k === 'trails') S.needClear = true;
+  if (it.k === 'invert') setInvert(P.invert);
+  if (it.k === 'colorBy') { rampSel = 0; buildRamp(); if (rampEd) rampEd.sync(); }
+  if (it.k === 'brush') sizeBrush();
+  if (it.preview) drawPreview();
+  if (it.place) S.flashPending = true;   // show the mask in the view while it is being placed
   refreshRows();
   if (it.solver) updateHud();
 }
 
-function makeRow(it){
-  if (it.type === 'ramp') {
-    const r = h('div', { class: 'row two' }, h('span', { class: 'lab' }, 'Ramp'), h('div', { class: 'ramp', style: `background:linear-gradient(to right,${[...RAMP_STOPS, RAMP_STOPS[0]].join(',')})` }));
-    rows.push({ it, row: r }); return r;
+/* Ramp editor: click the bar to add a key, drag a key to move it, arrows nudge it, Delete removes it */
+let rampEd = null, rampSel = 0;
+const MODE_NAME = { pdn: 'pdn', dir: '@N direction', angle: 'angle' };
+function makeRampEditor(){
+  const title = h('div', { class: 'ramp-title' });
+  const bar = h('div', { class: 'ramp-bar', title: 'Click to add a key' });
+  const keysEl = h('div', { class: 'ramp-keys' });
+  const track = h('div', { class: 'ramp-track' }, bar, keysEl);
+  const color = h('input', { type: 'color', id: 'ramp-color', 'aria-label': 'Key color' });
+  const pos = h('input', { type: 'number', id: 'ramp-pos', min: 0, max: 1, step: 0.01, 'aria-label': 'Key position' });
+  const del = h('button', { class: 'btn icon', type: 'button', title: 'Delete key', 'aria-label': 'Delete key' }, '−');
+  const presetSel = h('select', { id: 'ramp-preset', 'aria-label': 'Ramp preset' }, h('option', { value: '' }, 'Preset…'), ...Object.keys(PRESETS).map(n => h('option', { value: n }, n)));
+  const rev = h('button', { class: 'btn', type: 'button', title: 'Flip the ramp end to end' }, 'Reverse');
+  const tools = h('div', { class: 'ramp-tools' }, color, pos, del, presetSel, rev);
+  const wrap = h('div', { class: 'ramp-ed' }, title, track, tools);
+  const keys = () => rampKeys();
+  const gradient = () => [...keys()].sort((a, b) => a.p - b.p).map(x => `${x.c} ${(x.p * 100).toFixed(2)}%`).join(', ');
+  const paint = () => { bar.style.background = `linear-gradient(to right, ${gradient()})`; buildRamp(); };
+  const posOf = clientX => { const r = bar.getBoundingClientRect(); return Math.max(0, Math.min(1, (clientX - r.left) / r.width)); };
+  const tidy = v => Math.round(v * 1000) / 1000;
+  function syncTools(){
+    const k = keys()[rampSel]; color.value = k.c; pos.value = k.p.toFixed(3); del.disabled = keys().length <= 2;
   }
+  function sync(){
+    const k = keys(); rampSel = Math.min(rampSel, k.length - 1);
+    title.textContent = 'Ramp for ' + MODE_NAME[P.colorBy];
+    keysEl.replaceChildren(...k.map((key, i) => {
+      const m = h('button', { type: 'button', class: 'ramp-key' + (i === rampSel ? ' sel' : ''), style: `left:${key.p * 100}%;--c:${key.c}`, 'aria-label': `Ramp key ${i + 1}, position ${key.p.toFixed(2)}` });
+      m.addEventListener('pointerdown', e => {
+        e.preventDefault(); select(i); m.focus({ preventScroll: true }); m.setPointerCapture(e.pointerId);
+        const move = ev => { key.p = tidy(posOf(ev.clientX)); m.style.left = key.p * 100 + '%'; paint(); syncTools(); };
+        const up = () => { m.removeEventListener('pointermove', move); m.removeEventListener('pointerup', up); m.removeEventListener('pointercancel', up); };
+        m.addEventListener('pointermove', move); m.addEventListener('pointerup', up); m.addEventListener('pointercancel', up);
+      });
+      m.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); e.stopPropagation(); key.p = tidy(Math.max(0, Math.min(1, key.p + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.1 : 0.01)))); m.style.left = key.p * 100 + '%'; paint(); syncTools(); }
+        else if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); e.stopPropagation(); removeSel(); }
+        else if (e.key === ' ') e.stopPropagation();
+      });
+      return m;
+    }));
+    syncTools(); paint();
+  }
+  function select(i){ rampSel = i; [...keysEl.children].forEach((m, j) => m.classList.toggle('sel', j === i)); syncTools(); }
+  function removeSel(){ const k = keys(); if (k.length <= 2) return; k.splice(rampSel, 1); rampSel = Math.max(0, rampSel - 1); sync(); keysEl.children[rampSel]?.focus(); }
+  bar.addEventListener('click', e => {
+    const p = tidy(posOf(e.clientX)), k = keys();
+    k.push({ p, c: toHex(sampleRamp(k, p)) }); rampSel = k.length - 1; sync(); keysEl.children[rampSel].focus();
+  });
+  color.addEventListener('input', () => { const k = keys()[rampSel]; k.c = color.value; keysEl.children[rampSel].style.setProperty('--c', k.c); paint(); });
+  pos.addEventListener('change', () => { const k = keys()[rampSel]; let v = parseFloat(pos.value); if (!isFinite(v)) v = k.p; k.p = tidy(Math.max(0, Math.min(1, v))); sync(); });
+  del.addEventListener('click', removeSel);
+  presetSel.addEventListener('change', () => { if (!presetSel.value) return; P.ramps[P.colorBy] = preset(presetSel.value); presetSel.value = ''; rampSel = 0; sync(); });
+  rev.addEventListener('click', () => { keys().forEach(k => { k.p = tidy(1 - k.p); }); sync(); });
+  wrap.sync = sync;
+  return wrap;
+}
+
+function makeRow(it){
+  if (it.type === 'rampedit') { rampEd = makeRampEditor(); rows.push({ it, row: rampEd }); return rampEd; }
+  if (it.type === 'note') { const r = h('div', { class: 'note' }, it.text); rows.push({ it, row: r }); return r; }
   if (it.type === 'legend') {
     const chip = (c, t) => h('span', {}, h('i', { style: `background:${c}` }), t);
     const r = h('div', { class: 'legend' }, chip(RULE_COL.fwd, 'angle < lower'), chip(RULE_COL.back, 'angle > upper'), chip(RULE_COL.both, 'both'), chip(RULE_COL.idle, 'neither'));
@@ -830,23 +1978,31 @@ function makeRow(it){
   if (it.hint) label.title = it.hint;
   let row;
   if (!it.type) {
+    // The slider covers a useful range; the number box takes any value inside the hard limits, which only
+    // exist where a value would break the sim. Typing a value past the slider's ends stretches the slider to it.
     const toS = v => it.log ? Math.log10(v) : v;
     const fromS = v => it.log ? (it.round ? it.round(10 ** v) : 10 ** v) : v;
-    const fmt = v => (+v).toFixed(it.log && it.k === 'count' ? 0 : decimals(it.step));
+    const fmt = v => {
+      if (it.k === 'count') return (+v).toFixed(0);
+      const s = (+v).toFixed(decimals(it.step));
+      return +s === +v ? s : String(+(+v).toPrecision(7));   // show typed values in full
+    };
     const sl = h('input', { type: 'range', id, min: toS(it.min), max: toS(it.max), step: it.log ? 0.001 : it.step, value: toS(P[key]) });
     const num = h('input', { type: 'number', id: 'n-' + it.k, step: it.step, value: fmt(P[key]), 'aria-label': it.label + ' value' });
-    if (it.hint) sl.title = it.hint;
-    const lo = it.hardMin ?? it.min, hi = it.hardMax ?? it.max;
+    if (it.hint) { sl.title = it.hint; num.title = it.hint; }
+    const lo = it.hardMin ?? -1e9, hi = it.hardMax ?? 1e9;
+    const stretch = v => { const s = toS(v); if (s < +sl.min) sl.min = s; if (s > +sl.max) sl.max = s; };
     sl.addEventListener('input', () => { P[key] = fromS(+sl.value); num.value = fmt(P[key]); sliderFill(sl); onChange(it, false); });
     sl.addEventListener('change', () => onChange(it, true));
     num.addEventListener('change', () => {
       let v = parseFloat(num.value); if (!isFinite(v)) v = P[key];
       v = Math.min(hi, Math.max(lo, v));
-      P[key] = v; num.value = fmt(v); sl.value = toS(v); sliderFill(sl); onChange(it, true);
+      if (it.int) v = Math.round(v);
+      P[key] = v; num.value = fmt(v); stretch(v); sl.value = toS(v); sliderFill(sl); onChange(it, true);
     });
-    sliderFill(sl);
+    stretch(P[key]); sliderFill(sl);
     row = h('div', { class: 'row' + (it.main ? ' main' : '') }, label, sl, num);
-    row._sync = () => { sl.value = toS(P[key]); num.value = fmt(P[key]); sliderFill(sl); };
+    row._sync = () => { stretch(P[key]); sl.value = toS(P[key]); num.value = fmt(P[key]); sliderFill(sl); };
   } else if (it.type === 'seg') {
     const seg = h('div', { class: 'seg', role: 'group', 'aria-label': it.label });
     const btns = it.options.map(([v, t]) => {
@@ -862,15 +2018,31 @@ function makeRow(it){
 }
 function refreshRows(){ for (const { it, row } of rows) row.hidden = it.showIf ? !it.showIf() : false; }
 
-let formulaEl, overlapEl;
+const formulaEls = {};
+let overlapEl;
 function updateFormula(){
-  if (!formulaEl) return;
-  const n = v => String(+(+v).toFixed(4));
-  formulaEl.innerHTML =
-    `npt = nearpoints(0, @P, <em>${n(P.radius)}</em>, 2)[1]\n` +
+  if (!formulaEls.rule) return;
+  const n = v => String(+(+v).toFixed(4)), m = Math.round(P.pdMax);
+  formulaEls.rule.innerHTML =
+    (P.kMode === 'fit'
+      ? `k   = int(fit(@pd, <em>${n(P.kA)}</em>, <em>${n(P.kB)}</em>, 2, 2 + <em>${n(P.kExtra)}</em>))\nnpt = nearpoints(0, @P, <em>${n(P.radius)}</em>, k)[-1]\n`
+      : `npt = nearpoints(0, @P, <em>${n(P.radius)}</em>, 2)[1]\n`) +
     `angle = degrees(atan2(det, dot)) % 180\n` +
     `<span class="bk">angle &gt; <em>${n(P.angle)}</em></span>  N → nN by ${n(P.lerpHigh)}, P −= N·${n(P.move)}\n` +
     `<span class="fw">angle &lt; <em>${n(P.low)}</em></span>  N → nN by ${n(P.lerpLow)}, P += N·${n(P.move)}`;
+  formulaEls.pd.innerHTML =
+    `@pd  = len(nearpoints(0, @P, <em>${n(P.pdRadius)}</em>, <em>${m}</em>))\n` +
+    `@pdn = fit(@pd, 1, <em>${m}</em>, 0, 1)\n` +
+    `w    = fit(@pdn, <em>${n(P.shrinkMin)}</em>, <em>${n(P.shrinkMax)}</em>, 0, 1)\n` +
+    `@N  += @N * lerp(1, <em>${n(P.shrink)}</em>, w)`;
+  const src = { edges: 'edge', dark: '1 − brightness', light: 'brightness' }[P.follow];
+  formulaEls.guide.innerHTML =
+    `mask = smoothstep(<em>${n(P.thr)}</em>, <em>${n(P.thr + P.soft)}</em>, ${src})\n` +
+    `@N  = lerp(@N, contour, mask · <em>${n(P.steer)}</em>)\n` +
+    `@P += <em>${n(P.pull)}</em> · uphill(blur(${src}))` +
+    (P.darkSlow === 'on'
+      ? `\nif (mask &lt; <em>${n(P.minLum)}</em>) @speed *= <em>${n(P.multDark)}</em>\nevery move of @P is × @speed`
+      : '');
   overlapEl.hidden = !(P.angle < P.low);
   overlapEl.textContent = `angle > ${n(P.angle)} is below angle < ${n(P.low)}, so between them both branches run, in the wrangle's order.`;
 }
@@ -881,17 +2053,35 @@ function buildUI(){
     const sum = h('summary', {}, g.title);
     if (g.tag) sum.append(h('span', { class: 'tag' }, g.tag));
     const body = h('div', { class: 'folder-body' });
+    if (g.guide) body.append(buildGuideBox());
+    if (g.presets) body.append(buildPresetBox());
     if (g.formula) {
-      formulaEl = h('pre', { class: 'formula' }); overlapEl = h('div', { class: 'note warn' });
-      body.append(formulaEl, overlapEl);
+      formulaEls[g.formula] = h('pre', { class: 'formula' });
+      body.append(formulaEls[g.formula]);
+      if (g.formula === 'rule') { overlapEl = h('div', { class: 'note warn' }); body.append(overlapEl); }
     }
     g.items.forEach(it => body.append(makeRow(it)));
     if (g.inspect) body.append(buildInspect());
     const d = h('details', { class: 'folder' }, sum, body);
     d.open = !g.closed;
+    if (g.inspect) { inspectFolder = d; d.addEventListener('toggle', () => { if (d.open) readInspect(); }); }
     root.append(d);
   }
   refreshRows(); updateFormula();
+}
+function buildGuideBox(){
+  const file = h('input', { type: 'file', id: 'guideFile', accept: IMAGE_ACCEPT, hidden: '' });
+  const load = h('button', { class: 'btn', type: 'button', id: 'guideLoad' }, 'Load image…');
+  const rm = h('button', { class: 'btn', type: 'button', id: 'guideRemove' }, 'Remove');
+  file.addEventListener('change', () => { loadGuideFile(file.files[0]); file.value = ''; });
+  load.addEventListener('click', () => file.click());
+  rm.addEventListener('click', clearGuide);
+  return h('div', { class: 'guide-box' },
+    h('canvas', { id: 'guidePreview', 'aria-label': 'The loaded image, with the masked areas in amber', hidden: '' }),
+    h('div', { class: 'guide-empty', id: 'guideEmpty' }, 'No image loaded. Load one, drop it anywhere on the page, or paste it; on a phone this can take a photo.'),
+    h('div', { class: 'guide-row' }, h('span', { class: 'guide-name', id: 'guideName' }), load, rm, file),
+    h('div', { class: 'note warn', id: 'guideErr', hidden: '' }),
+    h('div', { class: 'note' }, `Reads ${FORMATS_TEXT}, and HEIC in Safari. Drop a file anywhere on the page or paste one (Ctrl/⌘ V).`));
 }
 function buildInspect(){
   const wrap = h('div', { style: 'display:flex;flex-direction:column;gap:8px' });
@@ -899,21 +2089,251 @@ function buildInspect(){
   num.addEventListener('change', () => { const v = Math.round(+num.value); inspectId = isFinite(v) ? Math.max(0, Math.min(S.count - 1, v)) : 0; num.value = inspectId; readInspect(); });
   wrap.append(h('div', { class: 'row two' }, h('label', { for: 'inspectId', class: 'code' }, '@ptnum'), num));
   const tb = h('tbody');
-  [['@ptnum', 'iv-pt'], ['@P', 'iv-P'], ['@N', 'iv-N'], ['npt', 'iv-npt'], ['distance', 'iv-dist'], ['angle', 'iv-angle'], ['branch', 'iv-branch']]
+  [['@ptnum', 'iv-pt'], ['@P', 'iv-P'], ['@N', 'iv-N'], ['k', 'iv-k'], ['npt', 'iv-npt'], ['distance', 'iv-dist'], ['angle', 'iv-angle'], ['branch', 'iv-branch'], ['@pd', 'iv-pd'], ['@pdn', 'iv-pdn'], ['mask', 'iv-mask'], ['@speed', 'iv-speed']]
     .forEach(([n, id]) => tb.append(h('tr', {}, h('td', {}, n), h('td', { id }, '–'))));
   wrap.append(h('div', { class: 'sheet-wrap' }, h('table', { class: 'sheet' }, h('thead', {}, h('tr', {}, h('th', {}, 'Attribute'), h('th', {}, 'Value'))), tb)));
-  wrap.append(h('div', { class: 'note' }, 'Click a point in the view to inspect it. angle is after the % 180, as the wrangle tests it.'));
+  wrap.append(h('div', { class: 'note' }, 'Shift-click a point in the view to inspect it. angle is after the % 180, as the wrangle tests it.'));
   return wrap;
+}
+
+/* ------------------------------------------------------------------ presets */
+// A preset is every setting in P except the transport state and the loaded image.
+// On claude.ai presets go to the viewer's own private store (db: data/users/<id>/presets/items/<preset>),
+// which follows them to any device they sign in on. Where that is not available (signed out, the GitHub
+// copy of the page) they go to this browser's local storage. Export / Import moves them as .json files.
+const PRESET_SKIP = new Set(['playing', 'marker']);
+const PRESET_APP = 'nearpoint-angle-solver';
+const PRESET_LOCAL_KEY = 'nearpoint-angle-solver.presets.v1';
+const PS = { mode: 'pending', list: [], col: null, unsub: null, active: null, dl: null };
+let ITEM_BY_KEY = null;
+const itemFor = k => {
+  if (!ITEM_BY_KEY) { ITEM_BY_KEY = {}; GROUPS.forEach(g => g.items.forEach(it => { if (it.k) ITEM_BY_KEY[it.k] = it; })); }
+  return ITEM_BY_KEY[k];
+};
+const clone = v => JSON.parse(JSON.stringify(v));
+function currentParams(){
+  const o = {};
+  for (const k in DEFAULTS) if (!PRESET_SKIP.has(k)) o[k] = clone(P[k]);
+  return o;
+}
+// Only known settings, of the right kind and inside the hard limits; a missing one takes its default,
+// so an imported or older preset can never push the sim into values that break it
+function cleanRamps(v){
+  const out = {};
+  for (const m in DEFAULTS.ramps) {
+    const r = v && Array.isArray(v[m]) ? v[m].filter(k => k && typeof k.p === 'number' && isFinite(k.p) && typeof k.c === 'string' && /^#[0-9a-f]{6}$/i.test(k.c))
+      .map(k => ({ p: Math.min(1, Math.max(0, k.p)), c: k.c.toLowerCase() })) : null;
+    out[m] = r && r.length >= 2 ? r : clone(DEFAULTS.ramps[m]);
+  }
+  return out;
+}
+function cleanParams(src){
+  const out = {};
+  for (const k in DEFAULTS) {
+    if (PRESET_SKIP.has(k)) continue;
+    const d = DEFAULTS[k], v = src ? src[k] : undefined, it = itemFor(k);
+    if (k === 'ramps') out.ramps = cleanRamps(v);
+    else if (typeof d === 'number') {
+      let n = typeof v === 'number' && isFinite(v) ? v : d;
+      if (it) { n = Math.min(it.hardMax ?? 1e9, Math.max(it.hardMin ?? -1e9, n)); if (it.int) n = Math.round(n); }
+      out[k] = n;
+    } else if (typeof d === 'string') out[k] = typeof v === 'string' && (!it || !it.options || it.options.some(o => o[0] === v)) ? v : d;
+    else out[k] = clone(v !== undefined && typeof v === typeof d ? v : d);
+  }
+  return out;
+}
+// Set every control from a preset. Each changed setting goes through onChange, exactly as if it had been
+// changed by hand; a different particle count, grid size or seed restarts the sim.
+function applyParams(params){
+  const p = cleanParams(params), changed = Object.keys(p).filter(k => JSON.stringify(p[k]) !== JSON.stringify(P[k]));
+  const regrid = ['count', 'size', 'seed'].some(k => changed.includes(k));
+  Object.assign(P, p);
+  rows.forEach(({ row }) => { if (row._sync) row._sync(); });
+  for (const k of changed) { const it = itemFor(k); if (it) onChange(it, true); }
+  S.flashPending = false;
+  rampSel = 0; if (rampEd) rampEd.sync(); else buildRamp();
+  updateSearchGrid(); updateFormula(); refreshRows(); sizeBrush(); drawPreview();
+  S.needClear = true;
+  if (regrid) resetPending = true; else if (!P.playing) S.infoDirty = true;
+  updateHud();
+  return regrid;
+}
+
+function localPresets(){ try { const v = JSON.parse(localStorage.getItem(PRESET_LOCAL_KEY) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+function storeLocalPresets(list){ try { localStorage.setItem(PRESET_LOCAL_KEY, JSON.stringify(list)); return true; } catch (e) { return false; } }
+function presetsLocal(msg){
+  if (PS.unsub) { PS.unsub(); PS.unsub = null; }
+  PS.mode = 'local'; PS.col = null; PS.list = localPresets();
+  renderPresets();
+  if (msg) presetStatus(msg);
+}
+async function initPresets(){
+  renderPresets();
+  const use = window.claude && typeof window.claude.use === 'function' ? n => window.claude.use(n).catch(() => null) : null;
+  if (!use) { presetsLocal(''); return; }
+  const [db, user, dl] = await Promise.all([use('db'), use('user'), use('downloads')]);
+  PS.dl = dl;
+  const uid = user ? await user.id() : null;
+  if (!db || !uid) { presetsLocal(''); return; }
+  try {
+    PS.col = db.doc('data/users/' + uid + '/presets').collection('items');
+    PS.mode = 'account';
+    PS.unsub = PS.col.onSnapshot(snap => {
+      PS.list = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(x => x.kind === 'preset' && typeof x.name === 'string');
+      renderPresets();
+    }, e => presetsLocal(e && e.code === 'revoked' ? '' : 'Presets could not be read from your account in this view, so they are kept in this browser.'));
+    renderPresets();
+  } catch (e) { presetsLocal(''); }
+}
+// Write one preset (a new one, or over `id`); resolves its id. Falls back to this browser if the account refuses.
+async function putPreset(name, params, id){
+  const now = Date.now(), prev = id ? PS.list.find(x => x.id === id) : null;
+  const body = { kind: 'preset', app: PRESET_APP, v: 1, name, params, created: prev && prev.created ? prev.created : now, updated: now };
+  if (PS.mode === 'account') {
+    try { const ref = id ? PS.col.doc(id) : PS.col.doc(); await ref.set(body); return ref.id; }
+    catch (e) {
+      if (e && e.code === 'quota_exceeded') throw new Error('Your preset store is full. Delete some presets, then try again.');
+      presetsLocal('Presets could not be saved to your account in this view, so they are kept in this browser.');
+    }
+  }
+  const list = localPresets(), nid = id || ('p' + now.toString(36) + Math.random().toString(36).slice(2, 7));
+  const i = list.findIndex(x => x.id === nid), item = { id: nid, ...body };
+  if (i >= 0) list[i] = item; else list.push(item);
+  if (!storeLocalPresets(list)) throw new Error('This browser would not store the preset (a private window, or site data is blocked). Use Export to keep it as a file.');
+  PS.list = list;
+  return nid;
+}
+async function savePreset(){
+  const input = document.getElementById('presetName'), name = (input.value || '').trim().slice(0, 80);
+  if (!name) { presetStatus('Type a name for these settings first.'); input.focus(); return; }
+  const same = PS.list.find(x => x.name.toLowerCase() === name.toLowerCase());
+  try {
+    PS.active = await putPreset(name, currentParams(), same ? same.id : null);
+    presetStatus(`${same ? 'Updated' : 'Saved'} “${name}”.`);
+  } catch (e) { presetStatus(e.message); }
+  renderPresets();
+}
+function loadPreset(p){
+  const regrid = applyParams(p.params);
+  PS.active = p.id;
+  const input = document.getElementById('presetName'); if (input) input.value = p.name;
+  presetStatus(`Loaded “${p.name}”.` + (regrid ? ' Particle count, grid size or seed differ, so the sim restarted.' : ''));
+  renderPresets();
+}
+async function deletePreset(p){
+  if (PS.mode === 'account') {
+    try { await PS.col.doc(p.id).delete(); }
+    catch (e) { presetStatus('That preset could not be deleted just now. Try again in a moment.'); return; }
+  } else { PS.list = localPresets().filter(x => x.id !== p.id); storeLocalPresets(PS.list); }
+  if (PS.active === p.id) PS.active = null;
+  const input = document.getElementById('presetName'); if (input && input.value.trim().toLowerCase() === p.name.toLowerCase()) input.value = '';
+  presetStatus(`Deleted “${p.name}”.`);
+  renderPresets();
+}
+const presetFile = items => JSON.stringify({ app: PRESET_APP, v: 1, presets: items.map(p => ({ name: p.name, params: p.params })) }, null, 2);
+const safeName = s => (s.replace(/[^\w\- .()]+/g, '_').replace(/^[ .]+|[ .]+$/g, '') || 'preset').slice(0, 80);
+async function exportPresets(items, filename){
+  const data = presetFile(items);
+  if (PS.dl) {
+    try { await PS.dl.save({ filename, data }); presetStatus(`Saved ${filename}.`); }
+    catch (e) { if (!e || e.code !== 'declined') presetStatus(e && e.code === 'rate_limited' ? 'A save prompt is already open.' : 'The file could not be saved in this view.'); }
+    return;
+  }
+  if (!window.claude) {                    // a copy of the page outside claude.ai: an ordinary download works
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([data], { type: 'application/json' })); a.download = filename;
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    presetStatus(`Saved ${filename}.`);
+    return;
+  }
+  try { await navigator.clipboard.writeText(data); presetStatus('Files cannot be saved in this view, so the preset was copied as JSON instead. Paste it into a .json file to keep it.'); }
+  catch (e) { presetStatus('Files cannot be saved in this view.'); }
+}
+async function importPresets(file){
+  if (!file) return;
+  let obj;
+  try { obj = JSON.parse(await file.text()); } catch (e) { presetStatus(`“${file.name}” is not a preset file (it is not valid JSON).`); return; }
+  let items = Array.isArray(obj && obj.presets) ? obj.presets
+    : obj && obj.params && typeof obj.params === 'object' ? [obj]
+    : obj && typeof obj === 'object' && ('angle' in obj || 'radius' in obj) ? [{ name: file.name.replace(/\.json$/i, ''), params: obj }] : [];
+  items = items.filter(x => x && typeof x === 'object' && x.params && typeof x.params === 'object').slice(0, 200);
+  if (!items.length) { presetStatus(`“${file.name}” has no presets in it.`); return; }
+  const taken = new Set(PS.list.map(x => x.name.toLowerCase()));
+  let n = 0, last = null;
+  try {
+    for (const it of items) {
+      const base = (String(it.name || '').trim() || file.name.replace(/\.json$/i, '') || 'Imported').slice(0, 72);
+      let name = base;
+      for (let k = 2; taken.has(name.toLowerCase()); k++) name = `${base} (${k})`;
+      taken.add(name.toLowerCase());
+      last = await putPreset(name, cleanParams(it.params), null);
+      n++;
+    }
+  } catch (e) { presetStatus(e.message); renderPresets(); return; }
+  PS.active = last;
+  presetStatus(n === 1 ? 'Imported 1 preset. Click its name to load it.' : `Imported ${n} presets. Click a name to load it.`);
+  renderPresets();
+}
+function presetStatus(msg){ const el = document.getElementById('presetStatus'); if (el) { el.textContent = msg; el.hidden = !msg; } }
+function fmtWhen(t){
+  if (!t) return '';
+  const d = new Date(t), now = new Date();
+  return d.toDateString() === now.toDateString() ? d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
+    : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', ...(d.getFullYear() !== now.getFullYear() ? { year: 'numeric' } : {}) });
+}
+function renderPresets(){
+  const box = document.getElementById('presetList'), where = document.getElementById('presetWhere'), all = document.getElementById('presetExportAll');
+  if (!box) return;
+  where.textContent = PS.mode === 'account' ? 'Saved to your claude.ai account: private to you, on any device you sign in on.'
+    : PS.mode === 'local' ? 'Saved in this browser only. Export a preset to keep it as a file or move it to another device.' : 'Connecting…';
+  const list = [...PS.list].sort((a, b) => (b.updated || 0) - (a.updated || 0));
+  all.disabled = !list.length;
+  box.replaceChildren();
+  if (!list.length) { box.append(h('div', { class: 'preset-empty' }, PS.mode === 'pending' ? 'Loading presets…' : 'No presets yet. Name the current settings and press Save.')); return; }
+  for (const p of list) {
+    const load = h('button', { type: 'button', class: 'preset-load', title: 'Load these settings' }, p.name);
+    load.addEventListener('click', () => loadPreset(p));
+    const ex = h('button', { type: 'button', class: 'btn', title: 'Save this preset as a .json file' }, 'Export');
+    ex.addEventListener('click', () => exportPresets([p], safeName(p.name) + '.json'));
+    const del = h('button', { type: 'button', class: 'btn', 'aria-label': `Delete ${p.name}` }, 'Delete');
+    let armed = null;
+    del.addEventListener('click', () => {
+      if (!armed) { del.textContent = 'Sure?'; del.classList.add('danger'); armed = setTimeout(() => { armed = null; del.textContent = 'Delete'; del.classList.remove('danger'); }, 3000); return; }
+      clearTimeout(armed); deletePreset(p);
+    });
+    box.append(h('div', { class: 'preset-item' + (p.id === PS.active ? ' active' : '') }, load, h('span', { class: 'preset-date' }, fmtWhen(p.updated)), ex, del));
+  }
+}
+function buildPresetBox(){
+  const name = h('input', { type: 'text', id: 'presetName', maxlength: '80', placeholder: 'Name these settings', 'aria-label': 'Preset name', autocomplete: 'off' });
+  const save = h('button', { class: 'btn primary', type: 'button', id: 'presetSave' }, 'Save');
+  name.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); savePreset(); } });
+  save.addEventListener('click', savePreset);
+  const file = h('input', { type: 'file', id: 'presetFile', accept: 'application/json,.json', hidden: '' });
+  file.addEventListener('change', () => { importPresets(file.files[0]); file.value = ''; });
+  const imp = h('button', { class: 'btn', type: 'button', id: 'presetImport' }, 'Import…');
+  imp.addEventListener('click', () => file.click());
+  const all = h('button', { class: 'btn', type: 'button', id: 'presetExportAll' }, 'Export all');
+  all.addEventListener('click', () => exportPresets([...PS.list].sort((a, b) => (b.updated || 0) - (a.updated || 0)), 'nearpoint-presets.json'));
+  return h('div', { class: 'preset-box' },
+    h('div', { class: 'preset-save' }, name, save),
+    h('div', { class: 'preset-list', id: 'presetList' }),
+    h('div', { class: 'preset-tools' }, imp, all, file),
+    h('div', { class: 'note', id: 'presetStatus', role: 'status', 'aria-live': 'polite', hidden: '' }),
+    h('div', { class: 'note', id: 'presetWhere' }));
 }
 
 /* GLSL viewer */
 const CODE = [
-  { id: 'step', label: 'Step', note: 'Runs every solver step, one fragment per point. This is the wrangle: nearest point within the radius, the angle, then the two branches. The VEX lines are kept as comments above their GLSL.',
+  { id: 'step', label: 'Step', note: 'Runs every solver step, one fragment per point. This is the wrangle: pd, then which neighbour to read (the closest, or the kth by pd), the angle and the two branches, then the image guide and slow in dark (@speed), pdn and the @N update. The image is turned into the two guide textures in JavaScript when it loads (blur, edge strength, contour direction). The VEX lines are kept as comments above their GLSL.',
     src: () => HDR + COMMON + FS_SIM },
   { id: 'emit', label: 'Emit (once)', note: 'Runs once when the sim starts and on Reset: grid positions and the random N. GPU random numbers differ from Houdini’s rand(), so the exact pattern differs; the distribution is the same.',
     src: () => HDR + FS_INIT },
-  { id: 'grid', label: 'Neighbour grid', note: 'Stands in for nearpoints()’ lookup structure. Four small passes run before every step, each its own fragment shader with the same header and helpers as the Step tab: bucket each point by grid cell, sort by bucket, record where each bucket starts and ends, then copy P and N into sorted order.',
-    src: () => [FS_KEY, FS_SORT, FS_RANGE, FS_REORDER].map(s => s.trim()).join('\n\n') },
+  { id: 'click', label: 'Click', note: 'Runs when you click in the view: points inside the circle get a new random N, made the same way as at emit, and @speed goes back to 1.',
+    src: () => HDR + FS_BRUSH },
+  { id: 'grid', label: 'Neighbour grid', note: 'Stands in for nearpoints()’ lookup structure. Four small steps run before every solver step, with the same header and helpers as the Step tab: bucket each point by grid cell; sort by bucket (a bitonic sort that runs up to three layers of the network per pass, 55 passes for 100k points instead of 153; the code is generated per pass shape, one is shown); record where each bucket starts and ends (drawn as points into the bucket table); then copy P and N into sorted order.',
+    src: () => [FS_KEY, sortSrc(SORT_FUSE, Array.from({ length: SORT_FUSE }, (_, i) => [SORT_FUSE - 1 - i, SORT_FUSE])), VS_RANGE, FS_RANGE, FS_REORDER].map(s => s.trim()).join('\n\n') },
 ];
 let codeTab = 'step';
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -951,9 +2371,16 @@ $('#play').addEventListener('click', () => setPlaying(!P.playing));
 $('#stepBtn').addEventListener('click', () => { setPlaying(false); stepOnce = true; });
 $('#resetBtn').addEventListener('click', () => { resetPending = true; });
 $('#fitBtn').addEventListener('click', () => fitView());
-function setPane(show){ $('#pane').hidden = !show; $('#revealBtn').hidden = show; $('#app').classList.toggle('pane-hidden', !show); }
+function setPane(show){ $('#pane').hidden = !show; $('#revealBtn').hidden = show; $('#app').classList.toggle('pane-hidden', !show); if (show && inspectShown()) readInspect(); }
 $('#hideBtn').addEventListener('click', () => setPane(false));
 $('#revealBtn').addEventListener('click', () => setPane(true));
+let lastInvert = 'on';   // what I toggles back to
+function setInvert(v){
+  if (v !== 'off') lastInvert = v;
+  P.invert = v;
+  $('#app').classList.toggle('inverted', v !== 'off');
+  rows.forEach(({ it, row }) => { if (it.k === 'invert') row._sync(); });
+}
 
 addEventListener('keydown', e => {
   const tag = (e.target.tagName || '').toLowerCase();
@@ -965,20 +2392,55 @@ addEventListener('keydown', e => {
   else if (e.key === 'h' || e.key === 'H') setPane($('#pane').hidden);
   else if (e.key === 'f' || e.key === 'F') fitView();
   else if (e.key === 'g' || e.key === 'G') setCode($('#codeSheet').hidden);
+  else if (e.key === 'i' || e.key === 'I') setInvert(P.invert === 'off' ? lastInvert : 'off');
 });
 
-/* pan / zoom / pick */
+/* pan / zoom / click to randomize N / shift-click to inspect */
+const brushEl = $('#brush');
+function sizeBrush(){ brushEl.style.width = brushEl.style.height = 2 * P.brush + 'px'; }
+function placeBrush(e){ const r = canvas.getBoundingClientRect(); brushEl.style.left = (e.clientX - r.left) + 'px'; brushEl.style.top = (e.clientY - r.top) + 'px'; }
+function flashBrush(e){
+  placeBrush(e); brushEl.hidden = false; brushEl.classList.add('hit');
+  setTimeout(() => { brushEl.classList.remove('hit'); if (e.pointerType !== 'mouse') brushEl.hidden = true; }, 220);
+}
 let drag = null;
 canvas.addEventListener('pointerdown', e => { canvas.setPointerCapture(e.pointerId); drag = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false }; });
 canvas.addEventListener('pointermove', e => {
+  if (e.pointerType === 'mouse') { brushEl.hidden = e.shiftKey || !!(drag && drag.moved); placeBrush(e); }
   if (!drag) return;
   const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
-  if (Math.abs(dx) + Math.abs(dy) > 4) { drag.moved = true; canvas.classList.add('dragging'); }
+  if (Math.abs(dx) + Math.abs(dy) > 4) { drag.moved = true; canvas.classList.add('dragging'); brushEl.hidden = true; }
   if (drag.moved) { cam.x = drag.cx - dx * dpr / cam.ppu; cam.y = drag.cy - dy * dpr / cam.ppu; S.needClear = true; }
 });
-canvas.addEventListener('pointerup', e => { if (drag && !drag.moved) pick(e.clientX, e.clientY); drag = null; canvas.classList.remove('dragging'); });
+canvas.addEventListener('pointerup', e => {
+  if (drag && !drag.moved) {
+    if (e.shiftKey || e.altKey) pick(e.clientX, e.clientY);
+    else { randomizeAt(e.clientX, e.clientY); flashBrush(e); }
+  }
+  drag = null; canvas.classList.remove('dragging');
+});
 canvas.addEventListener('pointercancel', () => { drag = null; canvas.classList.remove('dragging'); });
+canvas.addEventListener('pointerleave', () => { brushEl.hidden = true; });
 canvas.addEventListener('dblclick', fitView);
+// Drop an image file anywhere on the page, or paste one
+const dragHasFile = e => [...(e.dataTransfer?.types || [])].some(t => t === 'Files' || t === 'text/uri-list');
+addEventListener('dragover', e => { if (dragHasFile(e)) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; } });
+addEventListener('drop', e => {
+  if (!dragHasFile(e)) return;
+  e.preventDefault();
+  const f = e.dataTransfer.files[0];
+  if (f) { loadGuideFile(f); return; }
+  const uri = (e.dataTransfer.getData('text/uri-list') || '').split(/\r?\n/).find(l => l && l[0] !== '#') || '';
+  if (/^data:image\//i.test(uri)) loadGuide(uri, 'dropped image', false);
+  else if (uri) guideError('Images dragged from a web page cannot be read here. Save the image, then drop or load the file.');
+});
+addEventListener('paste', e => {
+  const items = [...(e.clipboardData?.items || [])].filter(it => it.kind === 'file');
+  const f = items.map(it => it.getAsFile()).find(Boolean);
+  if (!f) return;                       // plain text pastes into the number boxes as usual
+  e.preventDefault();
+  loadGuideFile(f);
+});
 canvas.addEventListener('wheel', e => {
   e.preventDefault();
   const r = canvas.getBoundingClientRect();
@@ -1008,17 +2470,22 @@ function pick(cx, cy){
 }
 
 /* ------------------------------------------------------------------ boot */
+// default guide image: the portrait, 512 px grayscale JPEG
+const DEFAULT_IMAGE = '';   // this copy ships without a default image: load one with the button, or drop or paste it
 buildUI();
-buildRamp();
+if (rampEd) rampEd.sync(); else buildRamp();
+sizeBrush();
 if (innerWidth < 640) setPane(false);
 resize();
 try { emit(); } catch (e) { fatal('Could not set up the GPU buffers: ' + e.message); return; }
 fitView();
+if (DEFAULT_IMAGE) loadGuide(DEFAULT_IMAGE, 'portrait.jpg', false);
+initPresets();
 readStats(); readInspect(); updateHud();
 requestAnimationFrame(frame);
 
 // handle for scripted testing from the console
-window.__sim = { P, S, emit, solve, readTex, render, setPlaying, updateSearchGrid };
+window.__sim = { P, S, G, emit, solve, readTex, render, setPlaying, updateSearchGrid, randomizeAt, cam };
 })();
 </script>
 </body>
